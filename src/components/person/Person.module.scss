@@ -1,0 +1,41 @@
+@import '~@blueprintjs/core/lib/scss/variables';
+
+$dot-size: 70px;
+$person-width: 400px;
+$person-heigth: 100px;
+
+.Person {
+  width: $person-width;
+  height: $person-heigth;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .dot {
+    height: $dot-size;
+    width: $dot-size;
+    line-height: $dot-size;
+    text-align: center;
+    font-size: x-large;
+    font-weight: 700;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .content {
+    margin-left: 25px;
+
+    #pname {
+      color: $dark-gray3;
+      font-size: large;
+      font-weight: 600;
+      padding-top: 20px;
+    }
+
+    #prole {
+      color: $dark-gray4;
+      font-style: italic;
+    }
+  }
+}

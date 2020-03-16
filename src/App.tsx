@@ -1,15 +1,9 @@
 import React from 'react';
 import './App.css';
-import Table from './components/table/Table';
-import Comp from './components/comp/Comp';
+import PersonView from './views/personView/PersonView';
 
 function App() {
-  return (
-    <div>
-      <Table></Table>
-      <Comp data="manu" />
-    </div>
-  );
+  return <PersonView />;
 }
 
 export default App;

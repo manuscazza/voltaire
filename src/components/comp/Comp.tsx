@@ -22,7 +22,7 @@ const Comp = (props: Data) => {
       <Button outlined intent="success" onClick={toggleHanadler}>
         Toggle
       </Button>
-      <Button className="m1">Second button</Button>
+      <Button className="ml4">Second button</Button>
     </div>
   );
 };

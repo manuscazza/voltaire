@@ -8,14 +8,16 @@ const filterOptions = ['Name', 'Role', 'Active'];
 
 interface MyProps {
   personList: IPerson[];
+  personDetailHandler?: (selectedPerson: IPerson) => void;
+  id?: string;
 }
 
-const PersonsListView: React.FunctionComponent<MyProps> = ({ personList }) => {
-  const [persons, setPersons] = useState<IPerson[]>(personList);
+const PersonsListView: React.FunctionComponent<MyProps> = props => {
+  const [persons, setPersons] = useState<IPerson[]>(props.personList);
   const searchInput = useRef<HTMLInputElement | null>(null);
 
   const clearSearchFilterHandler = () => {
-    setPersons(personList);
+    setPersons(props.personList);
     if (searchInput && searchInput.current) {
       searchInput.current.value = '';
     }
@@ -36,7 +38,7 @@ const PersonsListView: React.FunctionComponent<MyProps> = ({ personList }) => {
   };
 
   const searchItemsHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    const newPersons: IPerson[] = [...personList].filter(p =>
+    const newPersons: IPerson[] = [...props.personList].filter(p =>
       p.name.toLowerCase().includes(ev.target.value.toLowerCase())
     );
     setPersons(newPersons);
@@ -58,7 +60,6 @@ const PersonsListView: React.FunctionComponent<MyProps> = ({ personList }) => {
 
   const searchBar = (
     <InputGroup
-      id={styles.searchBar}
       inputRef={el => {
         searchInput.current = el;
       }}
@@ -72,13 +73,19 @@ const PersonsListView: React.FunctionComponent<MyProps> = ({ personList }) => {
     />
   );
   return (
-    <div className={styles.PersonListView}>
+    <div className={styles.PersonListView} id={props.id}>
       <div className={styles.BarsContainer}>
         {searchBar}
         {orderBy}
       </div>
+
       {persons.map((person, idx) => (
-        <Person name={person.name} role={person.role} key={idx} />
+        <Person
+          className={styles.ListItem}
+          person={person}
+          key={idx}
+          personDetailHandler={props.personDetailHandler}
+        />
       ))}
     </div>
   );

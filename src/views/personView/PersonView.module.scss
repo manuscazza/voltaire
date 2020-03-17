@@ -1,0 +1,13 @@
+.PersonViewContainer {
+  display: flex;
+  justify-content: space-between;
+  max-height: 100vh;
+
+  #personDetail {
+    width: 600px;
+  }
+
+  #personListView {
+    flex-grow: 0;
+  }
+}

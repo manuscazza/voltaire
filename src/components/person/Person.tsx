@@ -1,27 +1,33 @@
 import React from 'react';
 import { Card, Elevation } from '@blueprintjs/core';
 import { IPerson } from '../../models/IPerson';
-import classes from './Person.module.scss';
+import styles from './Person.module.scss';
 
-// React.HTMLAttributes<HTMLDivElement>
-
-const Person: React.FunctionComponent<IPerson & {
+interface MyProps {
+  person: IPerson;
+  personDetailHandler?: (selectedPerson: IPerson) => void;
   style?: React.CSSProperties;
-}> = person => {
+  className?: string;
+}
+
+const Person: React.FunctionComponent<MyProps> = props => {
+  const classes = [props.className, styles.Person];
   return (
     <Card
       elevation={Elevation.ONE}
       interactive
-      style={person.style}
-      className={classes.Person}
-      onClick={() => {}}
+      style={props.style}
+      className={classes.join(' ')}
+      onClick={() => {
+        if (props.personDetailHandler) props.personDetailHandler(props.person);
+      }}
     >
-      <span className={classes.dot}>
-        {person.name.split(' ').map(str => str.charAt(0))}
+      <span className={styles.dot}>
+        {props.person.name.split(' ').map(str => str.charAt(0))}
       </span>
-      <div className={classes.content}>
-        <p id={classes.pname}>{person.name}</p>
-        <p id={classes.prole}>{person.role}</p>
+      <div className={styles.content}>
+        <p id={styles.pname}>{props.person.name}</p>
+        <p id={styles.prole}>{props.person.role}</p>
       </div>
     </Card>
   );

@@ -8,7 +8,6 @@ $person-heigth: 100px;
   width: $person-width;
   height: $person-heigth;
   display: flex;
-  flex-direction: row;
   align-items: center;
 
   .dot {
@@ -24,13 +23,16 @@ $person-heigth: 100px;
   }
 
   .content {
-    margin-left: 25px;
+    padding-left: 24px;
+    display: flex;
+    flex-direction: column;
 
     #pname {
       color: $dark-gray3;
       font-size: large;
       font-weight: 600;
-      padding-top: 20px;
+      margin-top: 10px;
+      margin-bottom: 2px;
     }
 
     #prole {

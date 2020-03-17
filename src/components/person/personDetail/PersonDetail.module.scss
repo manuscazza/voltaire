@@ -1,0 +1,26 @@
+$square-size: 200px;
+
+.PersonDetail {
+
+  position: relative;
+
+  #square {
+    height: $square-size;
+    width: 100%;
+    background-color: #bbb;
+    display: inline-block;
+  }
+
+  .Name {
+    font-size: x-large;
+    font-weight: 700;
+    padding-top: 24px;
+    padding-left: 24px;
+  }
+
+  #closeDetail {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}

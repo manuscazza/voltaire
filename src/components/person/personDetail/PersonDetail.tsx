@@ -17,7 +17,7 @@ const PersonDetail: React.FunctionComponent<MyProps> = props => {
         onClick={() => {
           if (props.closeDetailHandler) props.closeDetailHandler();
         }}
-        icon="cross"
+        icon="arrow-left"
         minimal
         large
       />

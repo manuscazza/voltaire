@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import Person from '../Person';
 import styles from './PersonListView.module.scss';
-import { InputGroup, Button, HTMLSelect } from '@blueprintjs/core';
+import { InputGroup, HTMLSelect, NonIdealState } from '@blueprintjs/core';
 import { IPerson } from '../../../models/IPerson';
 
 const filterOptions = ['Name', 'Role', 'Active'];
@@ -15,13 +15,6 @@ interface MyProps {
 const PersonsListView: React.FunctionComponent<MyProps> = props => {
   const [persons, setPersons] = useState<IPerson[]>(props.personList);
   const searchInput = useRef<HTMLInputElement | null>(null);
-
-  const clearSearchFilterHandler = () => {
-    setPersons(props.personList);
-    if (searchInput && searchInput.current) {
-      searchInput.current.value = '';
-    }
-  };
 
   const orderByHandler = (ev: React.ChangeEvent<HTMLSelectElement>) => {
     if (ev.currentTarget.value) {
@@ -44,10 +37,6 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
     setPersons(newPersons);
   };
 
-  const clearSearchFilterBtn = (
-    <Button minimal icon="cross" onClick={clearSearchFilterHandler} />
-  );
-
   const orderBy = (
     <HTMLSelect
       id={styles.orderBy}
@@ -66,27 +55,36 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
       placeholder="Cerca..."
       leftIcon="search"
       type="search"
-      rightElement={clearSearchFilterBtn}
       onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
         searchItemsHandler(ev)
       }
     />
   );
+
+  const list = persons.map((person, idx) => (
+    <Person
+      className={styles.ListItem}
+      person={person}
+      key={idx}
+      personDetailHandler={props.personDetailHandler}
+    />
+  ));
+
+  const noItems = (
+    <NonIdealState
+      icon="search"
+      title="Nessuna persona trovata"
+      description="La tua ricerca non ha prodotto risultati"
+    />
+  );
+
   return (
     <div className={styles.PersonListView} id={props.id}>
       <div className={styles.BarsContainer}>
         {searchBar}
         {orderBy}
       </div>
-
-      {persons.map((person, idx) => (
-        <Person
-          className={styles.ListItem}
-          person={person}
-          key={idx}
-          personDetailHandler={props.personDetailHandler}
-        />
-      ))}
+      {persons.length ? list : noItems}
     </div>
   );
 };

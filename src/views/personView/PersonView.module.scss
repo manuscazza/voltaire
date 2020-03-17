@@ -1,7 +1,8 @@
 .PersonViewContainer {
   display: flex;
   justify-content: space-between;
-  max-height: 100vh;
+  // max-height: 100vh;
+  height: calc(100vh - 50px);
 
   #personDetail {
     width: 600px;

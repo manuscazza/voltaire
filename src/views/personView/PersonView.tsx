@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import PersonsListView from '../../components/person/personslist/PersonsListView';
-import personsList from '../../components/person/personslist/dummyPersonsList';
 import PersonDetail from '../../components/person/personDetail/PersonDetail';
 import { IPerson } from '../../models/IPerson';
+import PService from '../../services/PersonsService';
 import styles from './PersonView.module.scss';
 
 const PersonView: React.FunctionComponent<{}> = () => {
+  const personService = PService.getInstance();
+
   const [person, setPerson] = useState<IPerson | null>(null);
+  const [personsList, setPersonsList] = useState<IPerson[]>(
+    personService.getList()
+  );
+  if (!personsList.length) setPersonsList(personService.getList());
+
   const personDetailHandler = (selectedPerson: IPerson) => {
     setPerson(selectedPerson);
   };
+
   const closeDetailHandler = () => setPerson(null);
 
   const detailElement = (
@@ -22,8 +30,8 @@ const PersonView: React.FunctionComponent<{}> = () => {
 
   const listElement = (
     <PersonsListView
-      id={styles.personListView}
       personList={personsList}
+      // personList={[]}
       personDetailHandler={personDetailHandler}
     />
   );

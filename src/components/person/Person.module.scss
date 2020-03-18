@@ -2,11 +2,11 @@
 
 $dot-size: 70px;
 $person-width: 400px;
-$person-heigth: 100px;
+$person-height: 100px;
 
 .Person {
   width: $person-width;
-  height: $person-heigth;
+  height: $person-height;
   display: flex;
   align-items: center;
 

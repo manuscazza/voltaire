@@ -1,7 +1,13 @@
 import React, { useRef, useState } from 'react';
 import Person from '../Person';
 import styles from './PersonListView.module.scss';
-import { InputGroup, HTMLSelect, NonIdealState } from '@blueprintjs/core';
+import {
+  InputGroup,
+  HTMLSelect,
+  NonIdealState,
+  Button,
+  Intent
+} from '@blueprintjs/core';
 import { IPerson } from '../../../models/IPerson';
 
 const filterOptions = ['Name', 'Role', 'Active'];
@@ -9,7 +15,6 @@ const filterOptions = ['Name', 'Role', 'Active'];
 interface MyProps {
   personList: IPerson[];
   personDetailHandler?: (selectedPerson: IPerson) => void;
-  id?: string;
 }
 
 const PersonsListView: React.FunctionComponent<MyProps> = props => {
@@ -61,30 +66,50 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
     />
   );
 
-  const list = persons.map((person, idx) => (
-    <Person
-      className={styles.ListItem}
-      person={person}
-      key={idx}
-      personDetailHandler={props.personDetailHandler}
-    />
-  ));
-
   const noItems = (
     <NonIdealState
+      className={styles.NoItems}
       icon="search"
       title="Nessuna persona trovata"
-      description="La tua ricerca non ha prodotto risultati"
+      description="La tua ricerca non ha prodotto risultati."
     />
   );
 
+  const list = persons.length
+    ? persons.map((person, idx) => (
+        <Person
+          className={styles.ListItem}
+          person={person}
+          key={idx}
+          personDetailHandler={props.personDetailHandler}
+        />
+      ))
+    : noItems;
+
+  const addPersonBtn = <Button intent={Intent.PRIMARY}>Aggiungi</Button>;
+
+  const emptyList = (
+    <NonIdealState
+      className={styles.NoItems}
+      icon="people"
+      title="Non sono presenti persone"
+      description="La lista delle persone è vuota."
+      action={addPersonBtn}
+    />
+  );
+
+  let result: JSX.Element | JSX.Element[] = emptyList;
+  if (props.personList.length) {
+    result = list;
+  }
+
   return (
-    <div className={styles.PersonListView} id={props.id}>
+    <div className={styles.PersonListView}>
       <div className={styles.BarsContainer}>
         {searchBar}
         {orderBy}
       </div>
-      {persons.length ? list : noItems}
+      {result}
     </div>
   );
 };

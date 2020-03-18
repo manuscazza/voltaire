@@ -12,18 +12,20 @@ $gap: 30px;
   -ms-overflow-style: none;
   width: 100%;
   display: grid;
-  grid-template-columns: auto auto;
-  // grid-template-rows: minmax(auto, $person-height);
+  grid-template-columns: repeat(2, $person-width);
+  grid-auto-rows: $person-height;
   justify-content: center;
+  // align-items: flex-end;
   grid-gap: $gap;
 
   .BarsContainer {
-    margin-top: $gap;
+    padding-top: $gap * 1.5;
     grid-column: 1 / span 2;
 
     display: flex;
     justify-content: space-between;
 
+    //searchBar
     div:first-child {
       width: 100%;
       margin-right: $gap;
@@ -32,6 +34,10 @@ $gap: 30px;
     #orderBy {
       width: 200px;
     }
+  }
+
+  .NoItems {
+    grid-column: 1 / span 2;
   }
 
   .ListItem:last-child {

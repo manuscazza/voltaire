@@ -4,8 +4,10 @@ import {
   Toaster,
   Position,
   IToastProps,
-  Intent
+  Intent,
+  Icon
 } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 import PersonsListView from '../../components/person/personslist/PersonsListView';
 import PersonDetail from '../../components/person/personDetail/PersonDetail';
 import IPerson from '../../models/IPerson';
@@ -39,7 +41,7 @@ const PersonView: React.FunctionComponent<{}> = () => {
     //     }),
     //   text: 'Undo'
     // },
-    icon: 'tick',
+    icon: <Icon icon={IconNames.TICK} />,
     intent: Intent.SUCCESS,
     message: 'Person added.'
   };
@@ -50,7 +52,7 @@ const PersonView: React.FunctionComponent<{}> = () => {
     //     addToast({ message: "Isn't parting just the sweetest sorrow?" }),
     //   text: 'Adieu'
     // },
-    icon: 'delete',
+    icon: <Icon icon={IconNames.ERROR} />,
     intent: Intent.DANGER,
     message: 'Something went wrong. Check the data entered and retry.'
   };

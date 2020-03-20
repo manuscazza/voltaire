@@ -19,11 +19,12 @@ $gap: 30px;
   position: relative;
 
   .BarsContainer {
-    padding-top: $gap * 1.5;
+    padding-top: $gap;
     grid-column: 1 / span 2;
 
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     //searchBar
     div:first-child {
@@ -33,6 +34,11 @@ $gap: 30px;
 
     #orderBy {
       width: 200px;
+    }
+
+    .AddPersonBtn {
+      padding: 0 32px;
+      margin-left: $gap;
     }
   }
 

@@ -6,8 +6,10 @@ import {
   HTMLSelect,
   NonIdealState,
   Button,
-  Intent
+  Intent,
+  Icon
 } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 import IPerson, { IndexesAsStringArray } from '../../../models/IPerson';
 
 interface MyProps {
@@ -47,15 +49,13 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
         IndexesAsStringArray.map(op => op + ' - reverse')
       )}
       onChange={ev => orderByHandler(ev)}
-      placeholder="Filtra"
-      defaultValue=""
     ></HTMLSelect>
   );
 
   const searchBar = (
     <InputGroup
       placeholder="Cerca..."
-      leftIcon="search"
+      leftIcon={<Icon icon={IconNames.SEARCH} />}
       type="search"
       onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
         searchItemsHandler(ev)
@@ -66,7 +66,8 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
   const noItems = (
     <NonIdealState
       className={styles.NoItems}
-      icon="search"
+      // icon="search"
+      icon={<Icon icon={IconNames.SEARCH} iconSize={60} />}
       title="Nessuna persona trovata"
       description="La tua ricerca non ha prodotto risultati."
     />
@@ -83,10 +84,12 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
       ))
     : noItems;
 
-  const addPersonBtn = (
+  const addPersonBtn = (btnProps?: { minimal: boolean; className: string }) => (
     <Button
-      icon="new-person"
+      icon={<Icon icon={IconNames.NEW_PERSON} />}
       intent={Intent.PRIMARY}
+      className={btnProps?.className}
+      minimal={btnProps?.minimal}
       onClick={() => {
         if (props.toggleOverlay) props.toggleOverlay();
       }}
@@ -98,10 +101,10 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
   const emptyList = (
     <NonIdealState
       className={styles.NoItems}
-      icon="people"
+      icon={<Icon icon={IconNames.PEOPLE} iconSize={60} />}
       title="Non sono presenti persone"
       description="La lista delle persone è vuota."
-      action={addPersonBtn}
+      action={addPersonBtn()}
     />
   );
 
@@ -115,6 +118,7 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
       <div className={styles.BarsContainer}>
         {searchBar}
         {orderBy}
+        {addPersonBtn({ minimal: true, className: styles.AddPersonBtn })}
       </div>
       {result}
     </div>

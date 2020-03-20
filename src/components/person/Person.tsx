@@ -21,7 +21,7 @@ const Person: React.FunctionComponent<MyProps> = props => {
       }}
     >
       <span className={styles.dot}>
-        {props.person.name.split(' ').map(str => str.charAt(0))}
+        {props.person.name.split(' ').map(str => str.charAt(0).toUpperCase())}
       </span>
       <div className={styles.content}>
         <p id={styles.pname}>{props.person.name}</p>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import Person from '../Person';
 import styles from './PersonListView.module.scss';
 import {
@@ -11,34 +11,33 @@ import {
 import IPerson, { IndexesAsStringArray } from '../../../models/IPerson';
 
 interface MyProps {
-  personList: IPerson[];
+  displayList: IPerson[];
+  fullList: IPerson[];
   personDetailHandler?: (selectedPerson: IPerson) => void;
   toggleOverlay?: () => void;
+  updateList?: (list: IPerson[]) => void;
 }
 
 const PersonsListView: React.FunctionComponent<MyProps> = props => {
-  const [persons, setPersons] = useState<IPerson[]>(props.personList);
-  const searchInput = useRef<HTMLInputElement | null>(null);
-
   const orderByHandler = (ev: React.ChangeEvent<HTMLSelectElement>) => {
     if (ev.currentTarget.value) {
       let reverse = 1;
       if (ev.currentTarget.value.includes('reverse')) reverse = -1;
       const predicate = ev.currentTarget.value.split(' ')[0].toLowerCase();
-      const newPersons: IPerson[] = [...persons];
+      const newPersons: IPerson[] = [...props.displayList];
       newPersons.sort((a, b) => {
         if (a[predicate] === b[predicate]) return 0;
         return a[predicate] > b[predicate] ? reverse : -reverse;
       });
-      setPersons(newPersons);
+      if (props.updateList) props.updateList(newPersons);
     }
   };
 
   const searchItemsHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    const newPersons: IPerson[] = [...props.personList].filter(p =>
+    const newPersons: IPerson[] = [...props.fullList].filter(p =>
       p.name.toLowerCase().includes(ev.target.value.toLowerCase())
     );
-    setPersons(newPersons);
+    if (props.updateList) props.updateList(newPersons);
   };
 
   const orderBy = (
@@ -55,9 +54,6 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
 
   const searchBar = (
     <InputGroup
-      inputRef={el => {
-        searchInput.current = el;
-      }}
       placeholder="Cerca..."
       leftIcon="search"
       type="search"
@@ -76,8 +72,8 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
     />
   );
 
-  const list = persons.length
-    ? persons.map((person, idx) => (
+  const list = props.displayList.length
+    ? props.displayList.map((person, idx) => (
         <Person
           className={styles.ListItem}
           person={person}
@@ -110,7 +106,7 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
   );
 
   let result: JSX.Element | JSX.Element[] = emptyList;
-  if (props.personList.length) {
+  if (props.fullList.length) {
     result = list;
   }
 

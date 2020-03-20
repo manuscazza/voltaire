@@ -1,5 +1,11 @@
 import React, { useState, Fragment } from 'react';
-import { Overlay } from '@blueprintjs/core';
+import {
+  Overlay,
+  Toaster,
+  Position,
+  IToastProps,
+  Intent
+} from '@blueprintjs/core';
 import PersonsListView from '../../components/person/personslist/PersonsListView';
 import PersonDetail from '../../components/person/personDetail/PersonDetail';
 import IPerson from '../../models/IPerson';
@@ -9,14 +15,45 @@ import NewPersonForm from '../../components/person/newPersonForm/NewPersonForm';
 
 const PersonView: React.FunctionComponent<{}> = () => {
   const personService = PService.getInstance();
-
+  let toaster: Toaster;
   const [showOverlay, setShowOverlay] = useState<boolean>(false);
-  const [person, setPerson] = useState<IPerson | null>(null);
-  const [personsList, setPersonsList] = useState<IPerson[]>(
+  const [person, setPerson] = useState<IPerson | null>(null); // person to display on left side
+  const [personsList, setPersonsList] = useState<IPerson[]>( // total list of persons
     // personService.getList()
     []
   );
-  // if (!personsList.length) setPersonsList(personService.getList());
+  const [currentList, setCurrentList] = useState<IPerson[]>([...personsList]); // list to display on right side
+
+  const addToast = (toast: IToastProps) => {
+    toast.timeout = 3000;
+    if (toaster) toaster.show(toast);
+  };
+
+  const CREATE_PERSON_SUCCESS: IToastProps = {
+    // action: {
+    //   onClick: () =>
+    //     addToast({
+    //       icon: 'ban-circle',
+    //       intent: Intent.DANGER,
+    //       message: 'You cannot undo the past.'
+    //     }),
+    //   text: 'Undo'
+    // },
+    icon: 'tick',
+    intent: Intent.SUCCESS,
+    message: 'Person added.'
+  };
+
+  const CREATE_PERSON_FAILED: IToastProps = {
+    // action: {
+    //   onClick: () =>
+    //     addToast({ message: "Isn't parting just the sweetest sorrow?" }),
+    //   text: 'Adieu'
+    // },
+    icon: 'delete',
+    intent: Intent.DANGER,
+    message: 'Something went wrong. Check the data entered and retry.'
+  };
 
   const toggleOverlay = () => {
     setShowOverlay(show => !show);
@@ -29,10 +66,18 @@ const PersonView: React.FunctionComponent<{}> = () => {
   const closeDetailHandler = () => setPerson(null);
 
   const addPersonHandler = (person: IPerson) => {
-    const newPersonsList: IPerson[] = [...personsList];
-    newPersonsList.push(person);
-    setPersonsList(newPersonsList);
-    toggleOverlay();
+    // TODO: add the new person to the DB using person service and then
+    // reload the list.
+    if (person.name.length) {
+      const newPersonsList: IPerson[] = [...personsList];
+      newPersonsList.push(person);
+      setPersonsList(newPersonsList);
+      setCurrentList(newPersonsList);
+      toggleOverlay();
+      addToast(CREATE_PERSON_SUCCESS);
+    } else {
+      addToast(CREATE_PERSON_FAILED);
+    }
   };
 
   const detailElement = (
@@ -45,9 +90,11 @@ const PersonView: React.FunctionComponent<{}> = () => {
 
   const listElement = (
     <PersonsListView
-      personList={personsList}
+      displayList={currentList}
+      fullList={personsList}
       personDetailHandler={personDetailHandler}
       toggleOverlay={toggleOverlay}
+      updateList={setCurrentList}
     />
   );
 
@@ -69,6 +116,11 @@ const PersonView: React.FunctionComponent<{}> = () => {
         {detailElement}
         {listElement}
       </div>
+      <Toaster
+        maxToasts={2}
+        position={Position.BOTTOM}
+        ref={(ref: Toaster) => (toaster = ref)}
+      />
     </Fragment>
   );
 };

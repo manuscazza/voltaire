@@ -1,12 +1,11 @@
 import React from 'react';
 import { Card, Elevation } from '@blueprintjs/core';
-import { IPerson } from '../../models/IPerson';
+import IPerson from '../../models/IPerson';
 import styles from './Person.module.scss';
 
 interface MyProps {
   person: IPerson;
   personDetailHandler?: (selectedPerson: IPerson) => void;
-  style?: React.CSSProperties;
   className?: string;
 }
 
@@ -16,7 +15,6 @@ const Person: React.FunctionComponent<MyProps> = props => {
     <Card
       elevation={Elevation.ONE}
       interactive
-      style={props.style}
       className={classes.join(' ')}
       onClick={() => {
         if (props.personDetailHandler) props.personDetailHandler(props.person);

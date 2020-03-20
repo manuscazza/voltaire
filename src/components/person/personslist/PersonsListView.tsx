@@ -8,13 +8,12 @@ import {
   Button,
   Intent
 } from '@blueprintjs/core';
-import { IPerson } from '../../../models/IPerson';
-
-const filterOptions = ['Name', 'Role', 'Active'];
+import IPerson, { IndexesAsStringArray } from '../../../models/IPerson';
 
 interface MyProps {
   personList: IPerson[];
   personDetailHandler?: (selectedPerson: IPerson) => void;
+  toggleOverlay?: () => void;
 }
 
 const PersonsListView: React.FunctionComponent<MyProps> = props => {
@@ -45,7 +44,9 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
   const orderBy = (
     <HTMLSelect
       id={styles.orderBy}
-      options={filterOptions.concat(filterOptions.map(op => op + ' - reverse'))}
+      options={IndexesAsStringArray.concat(
+        IndexesAsStringArray.map(op => op + ' - reverse')
+      )}
       onChange={ev => orderByHandler(ev)}
       placeholder="Filtra"
       defaultValue=""
@@ -86,7 +87,17 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
       ))
     : noItems;
 
-  const addPersonBtn = <Button intent={Intent.PRIMARY}>Aggiungi</Button>;
+  const addPersonBtn = (
+    <Button
+      icon="new-person"
+      intent={Intent.PRIMARY}
+      onClick={() => {
+        if (props.toggleOverlay) props.toggleOverlay();
+      }}
+    >
+      Aggiungi
+    </Button>
+  );
 
   const emptyList = (
     <NonIdealState

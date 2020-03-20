@@ -1,4 +1,4 @@
-import { IPerson } from '../models/IPerson';
+import IPerson from '../models/IPerson';
 
 export const dummyList: IPerson[] = [
   { name: 'Mario Rossi', role: 'Cassa' },

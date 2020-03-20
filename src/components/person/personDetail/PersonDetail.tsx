@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
-import { IPerson } from '../../../models/IPerson';
+import IPerson from '../../../models/IPerson';
 import styles from './PersonDetail.module.scss';
 
 declare type MyProps = {

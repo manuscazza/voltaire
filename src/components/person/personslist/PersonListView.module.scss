@@ -15,8 +15,8 @@ $gap: 30px;
   grid-template-columns: repeat(2, $person-width);
   grid-auto-rows: $person-height;
   justify-content: center;
-  // align-items: flex-end;
   grid-gap: $gap;
+  position: relative;
 
   .BarsContainer {
     padding-top: $gap * 1.5;
@@ -38,6 +38,12 @@ $gap: 30px;
 
   .NoItems {
     grid-column: 1 / span 2;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 350px;
+    max-height: 350px;
   }
 
   .ListItem:last-child {

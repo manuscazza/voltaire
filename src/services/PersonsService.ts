@@ -1,6 +1,5 @@
-// import AbstractService from './AbstractService';
 import IService from './IService';
-import { IPerson } from '../models/IPerson';
+import IPerson from '../models/IPerson';
 import { dummyList, dummyPerson } from '../dummies/dummyPerson';
 
 const _getPersonList = () => dummyList;

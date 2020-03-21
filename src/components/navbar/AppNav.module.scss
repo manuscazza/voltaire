@@ -1,0 +1,16 @@
+@import '~@blueprintjs/core/lib/scss/variables.scss';
+
+#navbar {
+  position: fixed;
+  top: 0;
+  padding: 0 32px;
+
+  a {
+    color: $light-gray5;
+    text-decoration: none;
+  }
+
+  .Active {
+    color: $white;
+  }
+}

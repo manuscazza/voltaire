@@ -1,13 +1,16 @@
 import React from 'react';
 import { Cell, Column, Table } from '@blueprintjs/table';
+import { dummyList } from '../../dummies/dummyPerson';
 
-const TableView = (props: {}) => {
+interface MyProps {}
+
+const TableView: React.FunctionComponent<MyProps> = props => {
   const cellRender = (rowIndex: number) => (
-    <Cell>{`$${(rowIndex * 10).toFixed(2)}`}</Cell>
+    <Cell>{dummyList[rowIndex].name}</Cell>
   );
   return (
-    <Table numRows={5}>
-      <Column name="Prova" cellRenderer={cellRender} />
+    <Table numRows={dummyList.length} enableRowHeader={false}>
+      <Column name="Name" cellRenderer={cellRender} />
     </Table>
   );
 };

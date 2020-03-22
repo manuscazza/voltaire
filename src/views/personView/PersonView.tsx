@@ -21,8 +21,8 @@ const PersonView: React.FunctionComponent<{}> = () => {
   const [showOverlay, setShowOverlay] = useState<boolean>(false);
   const [person, setPerson] = useState<IPerson | null>(null); // person to display on left side
   const [personsList, setPersonsList] = useState<IPerson[]>( // total list of persons
-    // personService.getList()
-    []
+    personService.getList()
+    // []
   );
   const [currentList, setCurrentList] = useState<IPerson[]>([...personsList]); // list to display on right side
 

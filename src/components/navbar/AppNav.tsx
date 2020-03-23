@@ -12,6 +12,7 @@ import styles from './AppNav.module.scss';
 import { IconNames } from '@blueprintjs/icons';
 
 const size = 28;
+const hoverDelay = 750;
 
 const AppNav: React.FunctionComponent<{}> = props => {
   return (
@@ -25,7 +26,7 @@ const AppNav: React.FunctionComponent<{}> = props => {
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <NavLink to="/personale" activeClassName={styles.Active}>
-          <Tooltip content="Personale" hoverOpenDelay={750}>
+          <Tooltip content="Personale" hoverOpenDelay={hoverDelay}>
             <Button
               minimal
               icon={<Icon icon={IconNames.PEOPLE} iconSize={size} />}
@@ -33,7 +34,7 @@ const AppNav: React.FunctionComponent<{}> = props => {
           </Tooltip>
         </NavLink>
         <NavLink to="/turni" activeClassName={styles.Active}>
-          <Tooltip content="Turni" hoverOpenDelay={750}>
+          <Tooltip content="Turni" hoverOpenDelay={hoverDelay}>
             <Button
               minimal
               icon={<Icon icon={IconNames.CALENDAR} iconSize={size} />}
@@ -41,7 +42,7 @@ const AppNav: React.FunctionComponent<{}> = props => {
           </Tooltip>
         </NavLink>
         <NavLink to="/mail" activeClassName={styles.Active}>
-          <Tooltip content="Mail" hoverOpenDelay={750}>
+          <Tooltip content="Mail" hoverOpenDelay={hoverDelay}>
             <Button
               minimal
               icon={<Icon icon={IconNames.ENVELOPE} iconSize={size} />}
@@ -49,7 +50,7 @@ const AppNav: React.FunctionComponent<{}> = props => {
           </Tooltip>
         </NavLink>
         <NavLink to="/impostazioni" activeClassName={styles.Active}>
-          <Tooltip content="Impostazioni" hoverOpenDelay={750}>
+          <Tooltip content="Impostazioni" hoverOpenDelay={hoverDelay}>
             <Button
               minimal
               icon={<Icon icon={IconNames.COG} iconSize={size} />}

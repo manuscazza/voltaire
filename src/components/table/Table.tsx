@@ -1,6 +1,7 @@
 import React from 'react';
 import { Cell, Column, Table } from '@blueprintjs/table';
 import { ContextMenuTarget, Menu, MenuItem } from '@blueprintjs/core';
+// import logo from '../../assets/2.png';
 import {
   format,
   Interval,
@@ -42,7 +43,14 @@ const TableView: React.FunctionComponent<{}> = props => {
   const cols = days.map(day => generateColumns(day));
   cols.unshift(header);
   return (
-    <Table numRows={dummyList.length} enableRowHeader={false} children={cols} />
+    <>
+      <Table
+        numRows={dummyList.length}
+        enableRowHeader={false}
+        children={cols}
+      />
+      {/* <img src={logo} alt="ciao" style={{ backgroundColor: '#394b59' }}></img> */}
+    </>
   );
 };
 

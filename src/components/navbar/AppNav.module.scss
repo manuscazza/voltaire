@@ -1,9 +1,17 @@
 @import '~@blueprintjs/core/lib/scss/variables.scss';
 
+
+$pt-navbar-height: 62px;
+
 #navbar {
   position: fixed;
   top: 0;
   padding: 0 32px;
+  height: $pt-navbar-height;
+
+  img {
+    height: 48px;
+  }
 
   a {
     color: $light-gray5;
@@ -12,6 +20,10 @@
 
   .Active {
     color: $white;
+  }
+
+  .Group {
+    height: $pt-navbar-height;
   }
 
   button {

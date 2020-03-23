@@ -2,28 +2,31 @@
 @import '~@blueprintjs/core/lib/scss/variables';
 
 $gap: 20px;
-$num-columns: 3;
+$num-columns: 4;
 
 .PersonListView::-webkit-scrollbar {
   display: none;
 }
 
 .PersonListView {
+  padding: 32px;
   border: 1px solid grey;
   overflow-y: scroll;
   -ms-overflow-style: none;
   width: 100%;
   display: grid;
-  grid-template-columns: repeat($num-columns, $person-width);
+  // grid-template-columns: repeat($num-columns, $person-width);
+  // grid-auto-columns: minmax($person-width, auto);
+  grid-auto-columns: $person-width;
   grid-auto-rows: $person-height;
-  justify-content: center;
+  // justify-content: center;
   grid-gap: $gap;
   position: relative;
 
   .BarsContainer {
     // position: sticky;
     // top: 0;
-    padding-top: $gap * 2;
+    // padding-top: $gap * 2;
     grid-column: 1 / span $num-columns;
 
     display: flex;

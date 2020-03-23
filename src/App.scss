@@ -3,3 +3,31 @@
 body {
   padding-top: $pt-navbar-height;
 }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+h2 {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 180px;
+  font-weight: 900;
+  letter-spacing: -0.5rem;
+  text-transform: uppercase;
+  line-height: 125px;
+  background-image: url("./assets/clash.jpeg");
+  background-size: contain;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  // width: 800px;
+  height: 350px;
+  position: relative;
+}

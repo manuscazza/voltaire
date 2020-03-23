@@ -10,6 +10,7 @@ import {
 } from '@blueprintjs/core';
 import styles from './AppNav.module.scss';
 import { IconNames } from '@blueprintjs/icons';
+import logo from '../../assets/logo64.png';
 
 const size = 28;
 const hoverDelay = 750;
@@ -17,14 +18,15 @@ const hoverDelay = 750;
 const AppNav: React.FunctionComponent<{}> = props => {
   return (
     <Navbar className={Classes.DARK} id={styles.navbar}>
-      <Navbar.Group align={Alignment.LEFT}>
+      <Navbar.Group align={Alignment.LEFT} className={styles.Group}>
         <Navbar.Heading>
           <NavLink to="/home" activeClassName={styles.Active}>
-            Voltaire
+            {/* Voltaire */}
+            <img src={logo} alt="Voltaire" />
           </NavLink>
         </Navbar.Heading>
       </Navbar.Group>
-      <Navbar.Group align={Alignment.RIGHT}>
+      <Navbar.Group align={Alignment.RIGHT} className={styles.Group}>
         <NavLink to="/personale" activeClassName={styles.Active}>
           <Tooltip content="Personale" hoverOpenDelay={hoverDelay}>
             <Button

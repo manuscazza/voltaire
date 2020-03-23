@@ -1,6 +1,8 @@
 @import '../Person.module.scss';
+@import '~@blueprintjs/core/lib/scss/variables';
 
-$gap: 30px;
+$gap: 20px;
+$num-columns: 3;
 
 .PersonListView::-webkit-scrollbar {
   display: none;
@@ -12,15 +14,17 @@ $gap: 30px;
   -ms-overflow-style: none;
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, $person-width);
+  grid-template-columns: repeat($num-columns, $person-width);
   grid-auto-rows: $person-height;
   justify-content: center;
   grid-gap: $gap;
   position: relative;
 
   .BarsContainer {
-    padding-top: $gap;
-    grid-column: 1 / span 2;
+    // position: sticky;
+    // top: 0;
+    padding-top: $gap * 2;
+    grid-column: 1 / span $num-columns;
 
     display: flex;
     justify-content: space-between;
@@ -32,18 +36,23 @@ $gap: 30px;
       margin-right: $gap;
     }
 
-    #orderBy {
-      width: 200px;
-    }
-
     .AddPersonBtn {
       padding: 0 32px;
       margin-left: $gap;
     }
   }
 
+  .Letter {
+    // border: 1px solid red;
+    grid-column: 1 / span $num-columns;
+    font-size: x-large;
+    font-weight: 600;
+    color: $gray1;
+    line-height: $person-height;
+  }
+
   .NoItems {
-    grid-column: 1 / span 2;
+    grid-column: 1 / span $num-columns;
     position: absolute;
     top: 50%;
     left: 50%;

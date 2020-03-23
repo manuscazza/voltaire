@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Person from '../Person';
 import styles from './PersonListView.module.scss';
 import {
   InputGroup,
-  HTMLSelect,
   NonIdealState,
   Button,
   Intent,
   Icon
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import IPerson, { IndexesAsStringArray } from '../../../models/IPerson';
+import IPerson from '../../../models/IPerson';
 
 interface MyProps {
   displayList: IPerson[];
@@ -21,20 +20,6 @@ interface MyProps {
 }
 
 const PersonsListView: React.FunctionComponent<MyProps> = props => {
-  const orderByHandler = (ev: React.ChangeEvent<HTMLSelectElement>) => {
-    if (ev.currentTarget.value) {
-      let reverse = 1;
-      if (ev.currentTarget.value.includes('reverse')) reverse = -1;
-      const predicate = ev.currentTarget.value.split(' ')[0].toLowerCase();
-      const newPersons: IPerson[] = [...props.displayList];
-      newPersons.sort((a, b) => {
-        if (a[predicate] === b[predicate]) return 0;
-        return a[predicate] > b[predicate] ? reverse : -reverse;
-      });
-      if (props.updateList) props.updateList(newPersons);
-    }
-  };
-
   const searchItemsHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const newPersons: IPerson[] = [...props.fullList].filter(p =>
       p.name.toLowerCase().includes(ev.target.value.toLowerCase())
@@ -42,18 +27,9 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
     if (props.updateList) props.updateList(newPersons);
   };
 
-  const orderBy = (
-    <HTMLSelect
-      id={styles.orderBy}
-      options={IndexesAsStringArray.concat(
-        IndexesAsStringArray.map(op => op + ' - reverse')
-      )}
-      onChange={ev => orderByHandler(ev)}
-    ></HTMLSelect>
-  );
-
   const searchBar = (
     <InputGroup
+      large
       placeholder="Cerca..."
       leftIcon={<Icon icon={IconNames.SEARCH} />}
       type="search"
@@ -73,19 +49,28 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
     />
   );
 
-  const list = props.displayList.length
-    ? props.displayList.map((person, idx) => (
-        <Person
-          className={styles.ListItem}
-          person={person}
-          key={idx}
-          personDetailHandler={props.personDetailHandler}
-        />
-      ))
-    : noItems;
+  const data = groupByAlphaLetter(props.displayList);
+  const display = Object.keys(data).map((letter, index) => {
+    return (
+      <Fragment key={index}>
+        {<Letter letter={letter} />}
+        {data[letter].display.map((person: IPerson, idx: number) => (
+          <Person
+            className={styles.ListItem}
+            person={person}
+            key={idx}
+            personDetailHandler={props.personDetailHandler}
+          />
+        ))}
+      </Fragment>
+    );
+  });
+
+  const list = props.displayList.length ? display : noItems;
 
   const addPersonBtn = (btnProps?: { minimal: boolean; className: string }) => (
     <Button
+      large
       icon={<Icon icon={IconNames.NEW_PERSON} />}
       intent={Intent.PRIMARY}
       className={btnProps?.className}
@@ -117,7 +102,6 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
     <div className={styles.PersonListView}>
       <div className={styles.BarsContainer}>
         {searchBar}
-        {orderBy}
         {addPersonBtn({ minimal: true, className: styles.AddPersonBtn })}
       </div>
       {result}
@@ -126,3 +110,25 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
 };
 
 export default PersonsListView;
+
+const Letter: React.FunctionComponent<{ letter: string }> = ({ letter }) => {
+  return <div className={styles.Letter}>{letter}</div>;
+};
+
+declare type Panel = {
+  [index: string]: any;
+  // letter: string;
+  display: IPerson[];
+};
+const groupByAlphaLetter = (list: IPerson[]): Panel => {
+  const data = list
+    // .sort((a, b) => (a > b ? -1 : 1))
+    .reduce((group, el) => {
+      let letter: string = el.name.charAt(0).toUpperCase();
+      if (!group[letter]) group[letter] = { display: [el] };
+      else group[letter].display.push(el);
+      return group;
+    }, {} as Panel);
+
+  return data;
+};

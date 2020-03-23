@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import {
+  Drawer,
   Overlay,
   Toaster,
   Position,
@@ -21,7 +22,7 @@ const PersonView: React.FunctionComponent<{}> = () => {
   const [showOverlay, setShowOverlay] = useState<boolean>(false);
   const [person, setPerson] = useState<IPerson | null>(null); // person to display on left side
   const [personsList, setPersonsList] = useState<IPerson[]>( // total list of persons
-    personService.getList()
+    sortList(personService.getList())
     // []
   );
   const [currentList, setCurrentList] = useState<IPerson[]>([...personsList]); // list to display on right side
@@ -32,26 +33,12 @@ const PersonView: React.FunctionComponent<{}> = () => {
   };
 
   const CREATE_PERSON_SUCCESS: IToastProps = {
-    // action: {
-    //   onClick: () =>
-    //     addToast({
-    //       icon: 'ban-circle',
-    //       intent: Intent.DANGER,
-    //       message: 'You cannot undo the past.'
-    //     }),
-    //   text: 'Undo'
-    // },
     icon: <Icon icon={IconNames.TICK} />,
     intent: Intent.SUCCESS,
     message: 'Person added.'
   };
 
   const CREATE_PERSON_FAILED: IToastProps = {
-    // action: {
-    //   onClick: () =>
-    //     addToast({ message: "Isn't parting just the sweetest sorrow?" }),
-    //   text: 'Adieu'
-    // },
     icon: <Icon icon={IconNames.ERROR} />,
     intent: Intent.DANGER,
     message: 'Something went wrong. Check the data entered and retry.'
@@ -65,7 +52,7 @@ const PersonView: React.FunctionComponent<{}> = () => {
     setPerson(selectedPerson);
   };
 
-  const closeDetailHandler = () => setPerson(null);
+  const closeDrawer = () => setPerson(null);
 
   const addPersonHandler = (person: IPerson) => {
     // TODO: add the new person to the DB using person service and then
@@ -73,6 +60,7 @@ const PersonView: React.FunctionComponent<{}> = () => {
     if (person.name.length) {
       const newPersonsList: IPerson[] = [...personsList];
       newPersonsList.push(person);
+      sortList(newPersonsList);
       setPersonsList(newPersonsList);
       setCurrentList(newPersonsList);
       toggleOverlay();
@@ -82,12 +70,19 @@ const PersonView: React.FunctionComponent<{}> = () => {
     }
   };
 
-  const detailElement = (
-    <PersonDetail
-      person={person}
-      id={styles.personDetail}
-      closeDetailHandler={closeDetailHandler}
-    />
+  const drawer = (
+    <Drawer
+      isOpen={person ? true : false}
+      position={Position.LEFT}
+      size={'30%'}
+      onClose={closeDrawer}
+    >
+      <PersonDetail
+        person={person}
+        id={styles.personDetail}
+        closeDetailHandler={closeDrawer}
+      />
+    </Drawer>
   );
 
   const listElement = (
@@ -115,7 +110,7 @@ const PersonView: React.FunctionComponent<{}> = () => {
         />
       </Overlay>
       <div className={styles.PersonViewContainer}>
-        {detailElement}
+        {drawer}
         {listElement}
       </div>
       <Toaster
@@ -128,3 +123,9 @@ const PersonView: React.FunctionComponent<{}> = () => {
 };
 
 export default PersonView;
+
+const sortList = (list: IPerson[]) =>
+  list.sort((a, b) => {
+    if (a.name === b.name) return 0;
+    return a.name > b.name ? 1 : -1;
+  });

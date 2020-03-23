@@ -1,8 +1,13 @@
-$square-size: 200px;
+@import '~@blueprintjs/core/lib/scss/variables';
+@import '../Person.module.scss';
+
+$square-size: 400px;
 
 .PersonDetail {
 
   position: relative;
+  padding: 36px;
+  height: 100%;
 
   #square {
     height: $square-size;
@@ -20,6 +25,52 @@ $square-size: 200px;
   #closeDetail {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+
+
+$dot-size: 100px;
+// $person-width: 350px; //400px;
+// $person-height: 80px; //100px;
+
+.Person {
+  width: $person-width;
+  height: $person-height;
+  display: flex;
+  align-items: center;
+
+  .dot {
+    height: $dot-size;
+    width: $dot-size;
+    line-height: $dot-size;
+    text-align: center;
+    font-size: x-large;
+    font-weight: 700;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .content {
+    padding-left: 24px;
+    display: flex;
+    flex-direction: column;
+
+    #pname {
+      color: $dark-gray2;
+      font-size: x-large;
+      font-weight: 700;
+      margin-top: 12px;
+      // margin-bottom: 2px;
+    }
+
+    #prole {
+      font-size: larger;
+      color: $dark-gray4;
+      font-style: italic;
+    }
   }
 }

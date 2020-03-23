@@ -1,8 +1,8 @@
 @import '~@blueprintjs/core/lib/scss/variables';
 
 $dot-size: 70px;
-$person-width: 400px;
-$person-height: 100px;
+$person-width: 350px; //400px;
+$person-height: 80px; //100px;
 
 .Person {
   width: $person-width;
@@ -28,11 +28,11 @@ $person-height: 100px;
     flex-direction: column;
 
     #pname {
-      color: $dark-gray3;
+      color: $dark-gray2;
       font-size: large;
-      font-weight: 600;
-      margin-top: 10px;
-      margin-bottom: 2px;
+      font-weight: 400;
+      margin-top: 12px;
+      // margin-bottom: 2px;
     }
 
     #prole {

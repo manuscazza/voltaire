@@ -20,12 +20,12 @@ const Person: React.FunctionComponent<MyProps> = props => {
         if (props.personDetailHandler) props.personDetailHandler(props.person);
       }}
     >
-      <span className={styles.dot}>
+      {/* <span className={styles.dot}>
         {props.person.name.split(' ').map(str => str.charAt(0).toUpperCase())}
-      </span>
+      </span> */}
       <div className={styles.content}>
         <p id={styles.pname}>{props.person.name}</p>
-        <p id={styles.prole}>{props.person.role}</p>
+        {/* <p id={styles.prole}>{props.person.role}</p> */}
       </div>
     </Card>
   );

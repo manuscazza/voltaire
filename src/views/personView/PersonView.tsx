@@ -6,7 +6,9 @@ import {
   Position,
   IToastProps,
   Intent,
-  Icon
+  Icon,
+  InputGroup,
+  Button
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import PersonsListView from '../../components/person/personslist/PersonsListView';
@@ -54,6 +56,13 @@ const PersonView: React.FunctionComponent<{}> = () => {
 
   const closeDrawer = () => setPerson(null);
 
+  const searchItemsHandler = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const newPersons: IPerson[] = [...personsList].filter(p =>
+      p.name.toLowerCase().includes(ev.target.value.toLowerCase())
+    );
+    setCurrentList(newPersons);
+  };
+
   const addPersonHandler = (person: IPerson) => {
     // TODO: add the new person to the DB using person service and then
     // reload the list.
@@ -74,7 +83,7 @@ const PersonView: React.FunctionComponent<{}> = () => {
     <Drawer
       isOpen={person ? true : false}
       position={Position.LEFT}
-      size={'30%'}
+      size={'500px'}
       onClose={closeDrawer}
     >
       <PersonDetail
@@ -87,8 +96,9 @@ const PersonView: React.FunctionComponent<{}> = () => {
 
   const listElement = (
     <PersonsListView
+      searchItemsHandler={searchItemsHandler}
       displayList={currentList}
-      fullList={personsList}
+      emptyState={!personsList.length ? true : false}
       personDetailHandler={personDetailHandler}
       toggleOverlay={toggleOverlay}
       updateList={setCurrentList}

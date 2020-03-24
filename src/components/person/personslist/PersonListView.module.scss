@@ -1,53 +1,28 @@
 @import '../Person.module.scss';
-@import '~@blueprintjs/core/lib/scss/variables';
+@import '../../../App.scss';
 
-$gap: 20px;
-$num-columns: 4;
+$gap: 24px;
+$num-columns: 3;
 
 .PersonListView::-webkit-scrollbar {
   display: none;
 }
 
 .PersonListView {
-  padding: 32px;
-  border: 1px solid grey;
+  padding: 24px;
+  padding-top: 0;
+  // border: 2px solid grey;
   overflow-y: scroll;
   -ms-overflow-style: none;
   width: 100%;
   display: grid;
-  // grid-template-columns: repeat($num-columns, $person-width);
-  // grid-auto-columns: minmax($person-width, auto);
-  grid-auto-columns: $person-width;
-  grid-auto-rows: $person-height;
-  // justify-content: center;
+  grid-template-columns: repeat(auto-fit, $person-width);
   grid-gap: $gap;
-  position: relative;
-
-  .BarsContainer {
-    // position: sticky;
-    // top: 0;
-    // padding-top: $gap * 2;
-    grid-column: 1 / span $num-columns;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    //searchBar
-    div:first-child {
-      width: 100%;
-      margin-right: $gap;
-    }
-
-    .AddPersonBtn {
-      padding: 0 32px;
-      margin-left: $gap;
-    }
-  }
+  justify-content: center;
+  // position: relative;
 
   .Letter {
-    // border: 1px solid red;
-    grid-column: 1 / span $num-columns;
+    grid-column: 1 / -1;
     font-size: x-large;
     font-weight: 600;
     color: $gray1;
@@ -55,16 +30,34 @@ $num-columns: 4;
   }
 
   .NoItems {
-    grid-column: 1 / span $num-columns;
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -65%);
-    max-width: 350px;
-    max-height: 350px;
+    transform: translate(-50%, -60%);
+    width: 350px;
+    height: 350px;
   }
 
   .ListItem:last-child {
     margin-bottom: $gap;
+  }
+}
+
+.BarsContainer {
+  grid-column: 1 /-1;
+  padding-top: $gap;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  //searchBar
+  div:first-child {
+    width: 500px;
+    margin-right: 24px;
+  }
+
+  .AddPersonBtn {
+    // padding: 0 24px;
+    // margin-left: $gap;
   }
 }

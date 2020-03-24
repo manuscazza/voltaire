@@ -1,7 +1,7 @@
 @import '~@blueprintjs/core/lib/scss/variables';
 
 $dot-size: 70px;
-$person-width: 350px; //400px;
+$person-width: 310px; //400px;
 $person-height: 80px; //100px;
 
 .Person {
@@ -9,18 +9,6 @@ $person-height: 80px; //100px;
   height: $person-height;
   display: flex;
   align-items: center;
-
-  .dot {
-    height: $dot-size;
-    width: $dot-size;
-    line-height: $dot-size;
-    text-align: center;
-    font-size: x-large;
-    font-weight: 700;
-    background-color: #bbb;
-    border-radius: 50%;
-    display: inline-block;
-  }
 
   .content {
     padding-left: 24px;
@@ -33,11 +21,6 @@ $person-height: 80px; //100px;
       font-weight: 400;
       margin-top: 12px;
       // margin-bottom: 2px;
-    }
-
-    #prole {
-      color: $dark-gray4;
-      font-style: italic;
     }
   }
 }

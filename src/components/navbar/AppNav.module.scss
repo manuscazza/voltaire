@@ -1,12 +1,13 @@
-@import '~@blueprintjs/core/lib/scss/variables.scss';
+@import '../../App.scss';
 
 
-$pt-navbar-height: 62px;
+
 
 #navbar {
   position: fixed;
   top: 0;
-  padding: 0 32px;
+  padding-left: 32px;
+  padding-right: 0;
   height: $pt-navbar-height;
 
   img {

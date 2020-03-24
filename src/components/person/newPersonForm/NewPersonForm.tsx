@@ -44,7 +44,10 @@ const NewPersonForm: React.FunctionComponent<MyProps> = props => {
           type="text"
           rightElement={<Button minimal icon="person" />}
           placeholder="Inserisci nome..."
-          inputRef={el => (nameRef.current = el)}
+          inputRef={el => {
+            nameRef.current = el;
+            el?.focus();
+          }}
         ></InputGroup>
       </div>
       <div className={styles.Input}>

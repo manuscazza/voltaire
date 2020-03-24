@@ -9,10 +9,10 @@ import {
   Tooltip
 } from '@blueprintjs/core';
 import styles from './AppNav.module.scss';
-import { IconNames } from '@blueprintjs/icons';
+import { IconNames, IconName } from '@blueprintjs/icons';
 import logo from '../../assets/logo64.png';
 
-const size = 28;
+const iconSize = 24;
 const hoverDelay = 750;
 
 const AppNav: React.FunctionComponent<{}> = props => {
@@ -21,43 +21,22 @@ const AppNav: React.FunctionComponent<{}> = props => {
       <Navbar.Group align={Alignment.LEFT} className={styles.Group}>
         <Navbar.Heading>
           <NavLink to="/home" activeClassName={styles.Active}>
-            {/* Voltaire */}
             <img src={logo} alt="Voltaire" />
           </NavLink>
         </Navbar.Heading>
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT} className={styles.Group}>
         <NavLink to="/personale" activeClassName={styles.Active}>
-          <Tooltip content="Personale" hoverOpenDelay={hoverDelay}>
-            <Button
-              minimal
-              icon={<Icon icon={IconNames.PEOPLE} iconSize={size} />}
-            />
-          </Tooltip>
+          {renderButton('Personale', IconNames.PEOPLE)}
         </NavLink>
         <NavLink to="/turni" activeClassName={styles.Active}>
-          <Tooltip content="Turni" hoverOpenDelay={hoverDelay}>
-            <Button
-              minimal
-              icon={<Icon icon={IconNames.CALENDAR} iconSize={size} />}
-            />
-          </Tooltip>
+          {renderButton('Turni', IconNames.CALENDAR)}
         </NavLink>
         <NavLink to="/mail" activeClassName={styles.Active}>
-          <Tooltip content="Mail" hoverOpenDelay={hoverDelay}>
-            <Button
-              minimal
-              icon={<Icon icon={IconNames.ENVELOPE} iconSize={size} />}
-            />
-          </Tooltip>
+          {renderButton('Mail', IconNames.ENVELOPE)}
         </NavLink>
         <NavLink to="/impostazioni" activeClassName={styles.Active}>
-          <Tooltip content="Impostazioni" hoverOpenDelay={hoverDelay}>
-            <Button
-              minimal
-              icon={<Icon icon={IconNames.COG} iconSize={size} />}
-            />
-          </Tooltip>
+          {renderButton('Impostazioni', IconNames.COG)}
         </NavLink>
       </Navbar.Group>
     </Navbar>
@@ -65,3 +44,14 @@ const AppNav: React.FunctionComponent<{}> = props => {
 };
 
 export default AppNav;
+
+const renderButton = (text: string, iconName: IconName) => (
+  <Button
+    minimal
+    icon={<Icon icon={iconName} iconSize={iconSize} />}
+    text={text}
+    onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      e.currentTarget.blur();
+    }}
+  />
+);

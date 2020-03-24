@@ -1,8 +1,5 @@
 @import '../../App.scss';
 
-
-
-
 #navbar {
   position: fixed;
   top: 0;
@@ -15,12 +12,19 @@
   }
 
   a {
-    color: $light-gray5;
+    color: #a7b6c2;
     text-decoration: none;
   }
 
   .Active {
-    color: $white;
+    color: $light-gray4;
+    // color: $accent-color;
+    font-weight: 600;
+
+    svg {
+      fill: $light-gray4;
+      // fill: $accent-color;
+    }
   }
 
   .Group {
@@ -28,6 +32,6 @@
   }
 
   button {
-    margin-right: 16px;
+    margin-right: 8px;
   }
 }

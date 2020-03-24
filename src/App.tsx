@@ -17,7 +17,8 @@ function App() {
       <AppNav />
       <Switch>
         <Route exact path="/">
-          <Redirect to="/home" />
+          {/* <Redirect to="/home" /> */}
+          <WIP />
         </Route>
         <Route path="/home">
           <WIP />
@@ -29,10 +30,12 @@ function App() {
           <TableView />
         </Route>
         <Route path="/mail">
-          <Redirect to="/home" />
+          {/* <Redirect to="/home" /> */}
+          <WIP />
         </Route>
         <Route path="/impostazioni">
-          <Redirect to="/home" />
+          {/* <Redirect to="/home" /> */}
+          <WIP />
         </Route>
       </Switch>
     </Router>

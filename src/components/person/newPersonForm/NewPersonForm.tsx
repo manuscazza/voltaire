@@ -6,11 +6,13 @@ import {
   HTMLSelect,
   Button,
   FileInput,
-  Intent
+  Intent,
+  Icon
 } from '@blueprintjs/core';
 import styles from './NewPersonForm.module.scss';
 import { RolesAsStringArray, Role } from '../../../utils/Roles';
 import IPerson from '../../../models/IPerson';
+import { IconNames } from '@blueprintjs/icons';
 
 interface MyProps {
   closeOverlay: () => void;
@@ -20,16 +22,17 @@ interface MyProps {
 const NewPersonForm: React.FunctionComponent<MyProps> = props => {
   const nameRef = useRef<HTMLInputElement | null>(null);
   const roleRef = useRef<HTMLSelectElement | null>(null);
+  const surnameRef = useRef<HTMLInputElement | null>(null);
   const addPersonHandler = () => {
     if (
       props.addPerson &&
-      nameRef &&
       nameRef.current &&
-      roleRef &&
-      roleRef.current
+      roleRef.current &&
+      surnameRef.current
     ) {
       props.addPerson({
         name: nameRef.current?.value,
+        surname: surnameRef.current?.value,
         role: roleRef.current.value as Role,
         active: true
       });
@@ -42,11 +45,26 @@ const NewPersonForm: React.FunctionComponent<MyProps> = props => {
         <p>Nome</p>
         <InputGroup
           type="text"
-          rightElement={<Button minimal icon="person" />}
+          rightElement={
+            <Button minimal icon={<Icon icon={IconNames.PERSON} />} />
+          }
           placeholder="Inserisci nome..."
           inputRef={el => {
             nameRef.current = el;
             el?.focus();
+          }}
+        ></InputGroup>
+      </div>
+      <div className={styles.Input}>
+        <p>Cognome</p>
+        <InputGroup
+          type="text"
+          rightElement={
+            <Button minimal icon={<Icon icon={IconNames.PERSON} />} />
+          }
+          placeholder="Inserisci cognome..."
+          inputRef={el => {
+            surnameRef.current = el;
           }}
         ></InputGroup>
       </div>

@@ -23,15 +23,18 @@ const PersonDetail: React.FunctionComponent<MyProps> = props => {
       />
       <div className={styles.Person}>
         <span className={styles.dot}>
-          {props.person.name.split(' ').map(str => str.charAt(0).toUpperCase())}
+          {props.person.name
+            .charAt(0)
+            .toUpperCase()
+            .concat(props.person.surname.charAt(0).toUpperCase())}
         </span>
         <div className={styles.content}>
-          <p id={styles.pname}>{props.person.name}</p>
+          <p id={styles.pname}>
+            {props.person.name + ' ' + props.person.surname}
+          </p>
           <p id={styles.prole}>{props.person.role}</p>
         </div>
       </div>
-      {/* <div id={styles.square} /> */}
-      {/* <div className={styles.Name}>{props.person.name}</div> */}
     </div>
   ) : null;
 };

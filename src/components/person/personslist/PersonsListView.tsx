@@ -6,7 +6,8 @@ import {
   Icon,
   Button,
   Intent,
-  InputGroup
+  InputGroup,
+  Switch
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import IPerson from '../../../models/IPerson';
@@ -19,6 +20,8 @@ interface MyProps {
   personDetailHandler?: (selectedPerson: IPerson) => void;
   toggleOverlay?: () => void;
   updateList?: (list: IPerson[]) => void;
+  showFilter?: boolean;
+  filterHandler?: () => void;
 }
 
 const PersonsListView: React.FunctionComponent<MyProps> = props => {
@@ -30,8 +33,8 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
       description="La tua ricerca non ha prodotto risultati."
     />
   );
-
-  const data = groupByAlphaLetter(props.displayList);
+  const filterBy = !props.showFilter ? 'name' : 'surname';
+  const data = groupByAlphaLetter(props.displayList, filterBy);
 
   const display = Object.keys(data).map((letter, index) => {
     return (
@@ -43,6 +46,7 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
             person={person}
             key={idx}
             personDetailHandler={props.personDetailHandler}
+            invert={props.showFilter}
           />
         ))}
       </Fragment>
@@ -95,6 +99,7 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
       intent={Intent.PRIMARY}
       className={styles.AddPersonBtn}
       minimal
+      // outlined
       onClick={() => {
         if (props.toggleOverlay) props.toggleOverlay();
       }}
@@ -103,11 +108,24 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
     </Button>
   );
 
+  const filter = (
+    <Switch
+      className={styles.Filter}
+      large
+      checked={props.showFilter}
+      label={props.showFilter ? 'Cognome' : 'Nome'}
+      onChange={() => {
+        if (props.filterHandler) props.filterHandler();
+      }}
+    />
+  );
+
   return (
     <>
       <div className={styles.PersonListView}>
         <div className={styles.BarsContainer}>
           {searchBar}
+          {filter}
           {addPersonBtn}
         </div>
         {result}
@@ -127,9 +145,13 @@ declare type Panel = {
   // letter: string;
   display: IPerson[];
 };
-const groupByAlphaLetter = (list: IPerson[]): Panel => {
+
+declare type Filter = 'name' | 'surname';
+
+const groupByAlphaLetter = (list: IPerson[], filter: Filter): Panel => {
+  sortList(list, filter);
   const data = list.reduce((group, el) => {
-    let letter: string = el.name.charAt(0).toUpperCase();
+    const letter = el[filter.toString()].charAt(0).toUpperCase();
     if (!group[letter]) group[letter] = { display: [el] };
     else group[letter].display.push(el);
     return group;
@@ -137,3 +159,6 @@ const groupByAlphaLetter = (list: IPerson[]): Panel => {
 
   return data;
 };
+
+const sortList = (list: IPerson[], filter: Filter) =>
+  list.sort((a, b) => (a[filter.toString()] > b[filter.toString()] ? 1 : -1));

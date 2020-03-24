@@ -6,9 +6,7 @@ import {
   Position,
   IToastProps,
   Intent,
-  Icon,
-  InputGroup,
-  Button
+  Icon
 } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import PersonsListView from '../../components/person/personslist/PersonsListView';
@@ -21,10 +19,12 @@ import NewPersonForm from '../../components/person/newPersonForm/NewPersonForm';
 const PersonView: React.FunctionComponent<{}> = () => {
   const personService = PService.getInstance();
   let toaster: Toaster;
+  const [showFilter, toggleFilter] = useState<boolean>(false);
   const [showOverlay, setShowOverlay] = useState<boolean>(false);
   const [person, setPerson] = useState<IPerson | null>(null); // person to display on left side
   const [personsList, setPersonsList] = useState<IPerson[]>( // total list of persons
-    sortList(personService.getList())
+    // sortList(personService.getList())
+    personService.getList()
     // []
   );
   const [currentList, setCurrentList] = useState<IPerson[]>([...personsList]); // list to display on right side
@@ -34,16 +34,9 @@ const PersonView: React.FunctionComponent<{}> = () => {
     if (toaster) toaster.show(toast);
   };
 
-  const CREATE_PERSON_SUCCESS: IToastProps = {
-    icon: <Icon icon={IconNames.TICK} />,
-    intent: Intent.SUCCESS,
-    message: 'Person added.'
-  };
-
-  const CREATE_PERSON_FAILED: IToastProps = {
-    icon: <Icon icon={IconNames.ERROR} />,
-    intent: Intent.DANGER,
-    message: 'Something went wrong. Check the data entered and retry.'
+  const filterHandler = () => {
+    // ...
+    toggleFilter(filter => !filter);
   };
 
   const toggleOverlay = () => {
@@ -69,7 +62,7 @@ const PersonView: React.FunctionComponent<{}> = () => {
     if (person.name.length) {
       const newPersonsList: IPerson[] = [...personsList];
       newPersonsList.push(person);
-      sortList(newPersonsList);
+      // sortList(newPersonsList);
       setPersonsList(newPersonsList);
       setCurrentList(newPersonsList);
       toggleOverlay();
@@ -102,6 +95,8 @@ const PersonView: React.FunctionComponent<{}> = () => {
       personDetailHandler={personDetailHandler}
       toggleOverlay={toggleOverlay}
       updateList={setCurrentList}
+      showFilter={showFilter}
+      filterHandler={filterHandler}
     />
   );
 
@@ -134,8 +129,14 @@ const PersonView: React.FunctionComponent<{}> = () => {
 
 export default PersonView;
 
-const sortList = (list: IPerson[]) =>
-  list.sort((a, b) => {
-    if (a.name === b.name) return 0;
-    return a.name > b.name ? 1 : -1;
-  });
+const CREATE_PERSON_SUCCESS: IToastProps = {
+  icon: <Icon icon={IconNames.TICK} />,
+  intent: Intent.SUCCESS,
+  message: 'Person added.'
+};
+
+const CREATE_PERSON_FAILED: IToastProps = {
+  icon: <Icon icon={IconNames.ERROR} />,
+  intent: Intent.DANGER,
+  message: 'Something went wrong. Check the data entered and retry.'
+};

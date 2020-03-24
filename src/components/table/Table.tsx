@@ -1,7 +1,6 @@
 import React from 'react';
 import { Cell, Column, Table } from '@blueprintjs/table';
 import { ContextMenuTarget, Menu, MenuItem } from '@blueprintjs/core';
-// import logo from '../../assets/2.png';
 import {
   format,
   Interval,

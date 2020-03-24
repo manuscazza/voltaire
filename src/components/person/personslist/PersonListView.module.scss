@@ -56,8 +56,14 @@ $num-columns: 3;
     margin-right: 24px;
   }
 
+  .Filter {
+    display: inline-block;
+    padding: 10px 0 0 0;
+    width: 115px;
+  }
+
   .AddPersonBtn {
     // padding: 0 24px;
-    // margin-left: $gap;
+    margin-left: 12px;
   }
 }

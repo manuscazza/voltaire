@@ -21,8 +21,8 @@ const spin: React.CSSProperties = {
   width: 150, //'162px',
   height: 150, //'162px',
   position: 'absolute',
-  top: 120, //-18,
-  left: 250 //165,
+  top: 122, //-18,
+  left: 245 //165,
 };
 
 const center: React.CSSProperties = {
@@ -36,7 +36,7 @@ const workInProgress: React.CSSProperties = {
   fontFamily: 'OpenSans, sans-serif',
   fontSize: '180px',
   fontWeight: 900,
-  letterSpacing: '-0.5rem',
+  letterSpacing: '-0.6rem',
   textTransform: 'uppercase',
   lineHeight: '125px',
   backgroundImage: `url(${clash})`,

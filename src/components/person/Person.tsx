@@ -7,10 +7,13 @@ interface MyProps {
   person: IPerson;
   personDetailHandler?: (selectedPerson: IPerson) => void;
   className?: string;
+  invert?: boolean;
 }
 
 const Person: React.FunctionComponent<MyProps> = props => {
   const classes = [props.className, styles.Person];
+  const name = [props.person.name, props.person.surname];
+  if (props.invert) name.reverse();
   return (
     <Card
       elevation={Elevation.ONE}
@@ -21,7 +24,7 @@ const Person: React.FunctionComponent<MyProps> = props => {
       }}
     >
       <div className={styles.content}>
-        <p id={styles.pname}>{props.person.name}</p>
+        <p id={styles.pname}>{name.join(' ')}</p>
       </div>
     </Card>
   );

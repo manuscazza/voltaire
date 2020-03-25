@@ -59,16 +59,16 @@ const PersonView: React.FunctionComponent<{}> = () => {
   const addPersonHandler = (person: IPerson) => {
     // TODO: add the new person to the DB using person service and then
     // reload the list.
-    if (person.name.length) {
+    if (person.name.length && person.surname.length) {
       const newPersonsList: IPerson[] = [...personsList];
       newPersonsList.push(person);
       // sortList(newPersonsList);
       setPersonsList(newPersonsList);
       setCurrentList(newPersonsList);
       toggleOverlay();
-      addToast(CREATE_PERSON_SUCCESS);
+      addToast(generateToast('SUCCESS'));
     } else {
-      addToast(CREATE_PERSON_FAILED);
+      addToast(generateToast('FAILED'));
     }
   };
 
@@ -129,14 +129,26 @@ const PersonView: React.FunctionComponent<{}> = () => {
 
 export default PersonView;
 
-const CREATE_PERSON_SUCCESS: IToastProps = {
-  icon: <Icon icon={IconNames.TICK} />,
-  intent: Intent.SUCCESS,
-  message: 'Person added.'
+declare type ToastMessageType = {
+  [index: string]: any;
+};
+const msg: ToastMessageType = {
+  SUCCESS: [
+    'Bravo! Stai andando forte continua così!',
+    "Ricorda: 'Un lavoratore felice è un lavoratore produttivo'.",
+    'Persona aggiunta correttamente... Yay!',
+    "L'operazione è andata a buon fine, puoi concederti un caffe'.",
+    'Questa era la parte semplice... '
+  ],
+  FAILED: [
+    'Qualcosa è andato storto. Controlla di aver compilato tutti i campi e riprova.'
+  ]
 };
 
-const CREATE_PERSON_FAILED: IToastProps = {
-  icon: <Icon icon={IconNames.ERROR} />,
-  intent: Intent.DANGER,
-  message: 'Something went wrong. Check the data entered and retry.'
+const generateToast = (type: 'SUCCESS' | 'FAILED'): IToastProps => {
+  return {
+    icon: <Icon icon={type === 'SUCCESS' ? IconNames.TICK : IconNames.ERROR} />,
+    intent: type === 'SUCCESS' ? Intent.SUCCESS : Intent.DANGER,
+    message: msg[type][Math.floor(Math.random() * msg[type].length)]
+  };
 };

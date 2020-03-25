@@ -6,37 +6,43 @@ import {
   HTMLSelect,
   Button,
   FileInput,
-  Intent,
-  Icon
+  Intent
 } from '@blueprintjs/core';
 import styles from './NewPersonForm.module.scss';
 import { RolesAsStringArray, Role } from '../../../utils/Roles';
 import IPerson from '../../../models/IPerson';
-import { IconNames } from '@blueprintjs/icons';
 
 interface MyProps {
   closeOverlay: () => void;
-  addPerson?: (person: IPerson) => void;
+  addPerson: (person: IPerson) => void;
 }
 
 const NewPersonForm: React.FunctionComponent<MyProps> = props => {
   const nameRef = useRef<HTMLInputElement | null>(null);
   const roleRef = useRef<HTMLSelectElement | null>(null);
   const surnameRef = useRef<HTMLInputElement | null>(null);
+  const createRef = useRef<HTMLElement | null>(null);
+  let createBtn: HTMLElement | null;
+
+  const createBtnRef = (ref: HTMLElement | null) => (createBtn = ref);
+  const createNameRef = (ref: HTMLInputElement | null) =>
+    (nameRef.current = ref);
+  const createSurnameRef = (ref: HTMLInputElement | null) =>
+    (surnameRef.current = ref);
+  const createRoleRef = (ref: HTMLSelectElement | null) =>
+    (roleRef.current = ref);
+  const createCreateRef = (ref: HTMLElement | null) =>
+    (createRef.current = ref);
   const addPersonHandler = () => {
-    if (
-      props.addPerson &&
-      nameRef.current &&
-      roleRef.current &&
-      surnameRef.current
-    ) {
-      props.addPerson({
-        name: nameRef.current?.value,
-        surname: surnameRef.current?.value,
-        role: roleRef.current.value as Role,
-        active: true
-      });
-    }
+    props.addPerson({
+      name: nameRef.current?.value as string,
+      surname: surnameRef.current?.value as string,
+      role: roleRef.current?.value as Role,
+      active: true
+    });
+  };
+  const clickHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') createRef.current?.click();
   };
   return (
     <Card elevation={Elevation.ONE} interactive={false} className={styles.Form}>
@@ -45,27 +51,17 @@ const NewPersonForm: React.FunctionComponent<MyProps> = props => {
         <p>Nome</p>
         <InputGroup
           type="text"
-          rightElement={
-            <Button minimal icon={<Icon icon={IconNames.PERSON} />} />
-          }
           placeholder="Inserisci nome..."
-          inputRef={el => {
-            nameRef.current = el;
-            el?.focus();
-          }}
-        ></InputGroup>
+          inputRef={createNameRef}
+          onKeyPress={clickHandler}
+        />
       </div>
       <div className={styles.Input}>
         <p>Cognome</p>
         <InputGroup
           type="text"
-          rightElement={
-            <Button minimal icon={<Icon icon={IconNames.PERSON} />} />
-          }
           placeholder="Inserisci cognome..."
-          inputRef={el => {
-            surnameRef.current = el;
-          }}
+          inputRef={createSurnameRef}
         ></InputGroup>
       </div>
       <div className={styles.Input}>
@@ -73,12 +69,16 @@ const NewPersonForm: React.FunctionComponent<MyProps> = props => {
         <HTMLSelect
           id={styles.orderBy}
           options={RolesAsStringArray}
-          elementRef={el => (roleRef.current = el)}
+          elementRef={createRoleRef}
         ></HTMLSelect>
       </div>
       <div className={styles.Input}>
-        <p>Image</p>
-        <FileInput text="Scegli file..." onInputChange={() => {}} />
+        <p>Foto</p>
+        <FileInput
+          text="Scegli file..."
+          onInputChange={() => {}}
+          buttonText="Sfoglia"
+        />
       </div>
 
       <div className={styles.ButtonsGroup}>
@@ -89,7 +89,11 @@ const NewPersonForm: React.FunctionComponent<MyProps> = props => {
         >
           Annulla
         </Button>
-        <Button intent={Intent.PRIMARY} onClick={() => addPersonHandler()}>
+        <Button
+          intent={Intent.PRIMARY}
+          onClick={() => addPersonHandler()}
+          elementRef={createCreateRef}
+        >
           Crea
         </Button>
       </div>

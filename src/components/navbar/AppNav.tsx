@@ -29,12 +29,16 @@ const AppNav: React.FunctionComponent<{}> = props => {
         <NavLink to="/personale" activeClassName={styles.Active}>
           {renderButton('Personale', IconNames.PEOPLE)}
         </NavLink>
+        <Navbar.Divider />
         <NavLink to="/turni" activeClassName={styles.Active}>
           {renderButton('Turni', IconNames.CALENDAR)}
         </NavLink>
+        <Navbar.Divider />
         <NavLink to="/mail" activeClassName={styles.Active}>
           {renderButton('Mail', IconNames.ENVELOPE)}
         </NavLink>
+        <Navbar.Divider />
+
         <NavLink to="/impostazioni" activeClassName={styles.Active}>
           {renderButton('Impostazioni', IconNames.COG)}
         </NavLink>

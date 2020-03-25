@@ -22,11 +22,11 @@ const NewPersonForm: React.FunctionComponent<MyProps> = props => {
   const roleRef = useRef<HTMLSelectElement | null>(null);
   const surnameRef = useRef<HTMLInputElement | null>(null);
   const createRef = useRef<HTMLElement | null>(null);
-  let createBtn: HTMLElement | null;
 
-  const createBtnRef = (ref: HTMLElement | null) => (createBtn = ref);
-  const createNameRef = (ref: HTMLInputElement | null) =>
-    (nameRef.current = ref);
+  const createNameRef = (ref: HTMLInputElement | null) => {
+    nameRef.current = ref;
+    ref?.focus();
+  };
   const createSurnameRef = (ref: HTMLInputElement | null) =>
     (surnameRef.current = ref);
   const createRoleRef = (ref: HTMLSelectElement | null) =>
@@ -62,6 +62,7 @@ const NewPersonForm: React.FunctionComponent<MyProps> = props => {
           type="text"
           placeholder="Inserisci cognome..."
           inputRef={createSurnameRef}
+          onKeyPress={clickHandler}
         ></InputGroup>
       </div>
       <div className={styles.Input}>

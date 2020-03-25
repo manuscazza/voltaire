@@ -1,19 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import {
-  Navbar,
-  Button,
-  Alignment,
-  Classes,
-  Icon,
-  Tooltip
-} from '@blueprintjs/core';
+import { Navbar, Button, Alignment, Classes, Icon } from '@blueprintjs/core';
 import styles from './AppNav.module.scss';
 import { IconNames, IconName } from '@blueprintjs/icons';
 import logo from '../../assets/logo64.png';
 
 const iconSize = 24;
-const hoverDelay = 750;
 
 const AppNav: React.FunctionComponent<{}> = props => {
   return (

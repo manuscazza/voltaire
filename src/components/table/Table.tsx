@@ -1,78 +1,114 @@
 import React from 'react';
-import { Cell, Column, Table } from '@blueprintjs/table';
-import { ContextMenuTarget, Menu, MenuItem } from '@blueprintjs/core';
-import {
-  format,
-  Interval,
-  startOfWeek,
-  endOfWeek,
-  eachDayOfInterval
-} from 'date-fns';
-import { dummyList } from '../../dummies/dummyPerson';
+import ReactDataSheet from 'react-datasheet';
+import 'react-datasheet/lib/react-datasheet.css';
+import { format, Interval, startOfWeek, endOfWeek, eachDayOfInterval, toDate, getTime, isDate } from 'date-fns';
+// import it_IT from 'date-fns/locale/it';
+// import { dummyList } from '../../dummies/dummyPerson';
+import styles from './Table.module.scss';
 
-declare type VewType = 'month' | 'week' | 'day';
+const DEL = ' & '; //delimita start - end
+const SEP = ' * '; //separa 2 turni
 
-interface MyProps {
-  type: VewType;
-  range?: number;
+const turno1: Interval = {
+  start: new Date(2020, 10, 8, 12, 0),
+  end: new Date(2020, 10, 8, 14, 30)
+};
+const turno2: Interval = {
+  start: new Date(2020, 10, 8, 18, 30),
+  end: new Date(2020, 10, 8, 22, 0)
+};
+const FORMAT = 'HH:mm';
+
+const grid: GridElement[][] = [
+  [{ value: turno1 }, { value: turno1 }, { value: turno1 }, { value: turno2 }],
+  [{ value: turno2 }, { value: turno2 }, { value: turno2 }, { value: turno1 }],
+  [{ value: turno2 }, { value: turno1 }, { value: turno2 }, { value: turno1 }],
+  [{ value: turno2 }, { value: turno2 }, { value: turno1 }, { value: turno1 }],
+  [{ value: turno2 }, { value: turno1 }, { value: turno2 }, { value: turno1 }]
+];
+
+export interface GridElement extends ReactDataSheet.Cell<GridElement, string> {
+  value: Interval | null;
 }
 
-const FORMAT = 'eee dd';
+class MyReactDataSheet extends ReactDataSheet<GridElement, string> {}
 
-const TableView: React.FunctionComponent<{}> = props => {
-  const today = new Date();
-  const interval: Interval = {
-    start: startOfWeek(today, { weekStartsOn: 1 }),
-    end: endOfWeek(today, { weekStartsOn: 1 })
-  };
-  const days = eachDayOfInterval(interval);
+interface AppState {
+  grid: GridElement[][];
+}
 
-  const generateColumns = (day: Date) => (
-    <Column name={format(day, FORMAT)} cellRenderer={dataRenderer} />
-  );
-
-  const dataRenderer = (rowIndex: number) => (
-    <Cell>{/* <RightClickMe /> */}</Cell>
-  );
-  const nameRenderer = (rowIndex: number) => (
-    <Cell>{dummyList[rowIndex].name}</Cell>
-  );
-
-  const header = <Column cellRenderer={nameRenderer} name="" />;
-  const cols = days.map(day => generateColumns(day));
-  cols.unshift(header);
+//You can also strongly type all the Components or SFCs that you pass into ReactDataSheet.
+const cellRenderer: ReactDataSheet.CellRenderer<GridElement, string> = props => {
   return (
-    <>
-      <Table
-        numRows={dummyList.length}
-        enableRowHeader={false}
-        children={cols}
-      />
-      {/* <img src={logo} alt="ciao" style={{ backgroundColor: '#394b59' }}></img> */}
-    </>
+    <td
+      onMouseDown={props.onMouseDown}
+      onMouseOver={props.onMouseOver}
+      onDoubleClick={props.onDoubleClick}
+      className={!props.selected ? styles.Cell : styles.Selected}
+    >
+      {props.children}
+    </td>
   );
 };
 
-export default TableView;
+const DELIMITER = '-';
 
-@ContextMenuTarget
-class RightClickMe extends React.Component<{}, {}> {
-  public render() {
-    // root element must support `onContextMenu`
-    return <div>click me</div>;
+const myValueRenderer: ReactDataSheet.ValueRenderer<GridElement, string> = (cell, i, j) => {
+  return cell.value ? `${cell.value.start + DELIMITER + cell.value.end}` : null;
+};
+
+export default class TableComponent extends React.Component<{}, AppState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      grid
+    };
   }
 
-  public renderContextMenu() {
-    // return a single element, or nothing to use default browser behavior
+  render() {
     return (
-      <Menu>
-        <MenuItem onClick={() => alert('clicked')} text="Save" />
-        <MenuItem onClick={() => alert('clicked')} text="Delete" />
-      </Menu>
+      <MyReactDataSheet
+        data={this.state.grid}
+        valueRenderer={myValueRenderer}
+        onCellsChanged={changes => {
+          const grid = this.state.grid.map(row => [...row]);
+          changes.forEach(({ cell, row, col, value }) => {
+            let turno: Interval | null = null;
+            console.log(value);
+            if (value) {
+              const dates = value.split(DELIMITER);
+
+              turno = {
+                start: new Date(dates[0]),
+                end: new Date(dates[1])
+              };
+            }
+            grid[row][col] = { ...grid[row][col], value: turno };
+          });
+
+          this.setState({ grid });
+        }}
+        cellRenderer={cellRenderer}
+        valueViewer={valueViewer}
+        dataEditor={dataEditor}
+      />
     );
   }
-
-  public onContextMenuClose() {
-    // Optional method called once the context menu is closed.
-  }
 }
+
+const valueViewer: React.SFC<ReactDataSheet.ValueViewerProps<GridElement, string>> = props => {
+  return (
+    <div>
+      {props.cell.value ? (
+        <p>{`${format(props.cell.value.start, FORMAT)} - ${format(props.cell.value.end, FORMAT)}`}</p>
+      ) : (
+        'riposo'
+      )}
+    </div>
+  );
+};
+
+const dataEditor: React.SFC<ReactDataSheet.DataEditorProps<GridElement, string>> = props => {
+  console.log(props.value);
+  return <div>prova</div>;
+};

@@ -1,0 +1,15 @@
+.TableView::-webkit-scrollbar {
+  display: none;
+}
+
+.TableView {
+  border: 2px solid red;
+  height: calc(100vh - 56px);
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+
+
+  .Table {}
+
+
+}

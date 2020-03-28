@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import PersonView from './views/personView/PersonView';
 import AppNav from './components/navbar/AppNav';
-import TableView from './components/table/Table';
+import TableView from './views/tableView/TableView';
 import WIP from './components/workInProgress/WIP';
 import './App.scss';
 
@@ -17,8 +17,8 @@ function App() {
       <AppNav />
       <Switch>
         <Route exact path="/">
-          {/* <Redirect to="/home" /> */}
-          <WIP />
+          <Redirect to="/home" />
+          {/* <WIP /> */}
         </Route>
         <Route path="/home">
           <WIP />

@@ -117,6 +117,7 @@ const PersonsListView: React.FunctionComponent<MyProps> = props => {
       onChange={() => {
         if (props.filterHandler) props.filterHandler();
       }}
+      onClick={el => el.currentTarget.blur()}
     />
   );
 

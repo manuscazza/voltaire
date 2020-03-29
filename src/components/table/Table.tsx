@@ -2,12 +2,11 @@ import React from 'react';
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import { format, Interval, startOfWeek, endOfWeek, eachDayOfInterval, toDate, getTime, isDate } from 'date-fns';
-// import it_IT from 'date-fns/locale/it';
-// import { dummyList } from '../../dummies/dummyPerson';
+import it_IT from 'date-fns/locale/it';
+import { dummyList } from '../../dummies/dummyPerson';
 import styles from './Table.module.scss';
 
-const DEL = ' & '; //delimita start - end
-const SEP = ' * '; //separa 2 turni
+const dataHeader = (data: Date) => format(data, 'eee dd', { locale: it_IT });
 
 const turno1: Interval = {
   start: new Date(2020, 10, 8, 12, 0),
@@ -37,39 +36,84 @@ interface AppState {
   grid: GridElement[][];
 }
 
-//You can also strongly type all the Components or SFCs that you pass into ReactDataSheet.
-const cellRenderer: ReactDataSheet.CellRenderer<GridElement, string> = props => {
-  return (
-    <td
-      onMouseDown={props.onMouseDown}
-      onMouseOver={props.onMouseOver}
-      onDoubleClick={props.onDoubleClick}
-      className={!props.selected ? styles.Cell : styles.Selected}
-    >
-      {props.children}
-    </td>
-  );
-};
-
 const DELIMITER = '-';
 
-const myValueRenderer: ReactDataSheet.ValueRenderer<GridElement, string> = (cell, i, j) => {
-  return cell.value ? `${cell.value.start + DELIMITER + cell.value.end}` : null;
-};
+interface MyProps {
+  columns: Date[];
+}
 
-export default class TableComponent extends React.Component<{}, AppState> {
-  constructor(props: {}) {
+export default class TableComponent extends React.Component<MyProps, AppState> {
+  constructor(props: { columns: Date[] }) {
     super(props);
     this.state = {
       grid
     };
   }
 
+  cellRenderer: ReactDataSheet.CellRenderer<GridElement, string> = props => {
+    const classes = [!props.selected ? styles.Cell : styles.Selected];
+    if (props.row % 2 === 0) classes.push(styles.Colored);
+    return (
+      <td
+        onMouseDown={props.onMouseDown}
+        onMouseOver={props.onMouseOver}
+        onDoubleClick={props.onDoubleClick}
+        className={classes.join(' ')}
+      >
+        {props.children}
+      </td>
+    );
+  };
+
+  mySheetRenderer: React.SFC<ReactDataSheet.SheetRendererProps<GridElement, string>> = props => (
+    <table className={styles.Table}>
+      <thead>
+        <tr>
+          <th />
+          {this.props.columns.map(day => (
+            <th className={styles.Header}>{dataHeader(day)}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>{props.children}</tbody>
+    </table>
+  );
+
+  myRowRenderer: React.SFC<ReactDataSheet.RowRendererProps<GridElement, string>> = props => (
+    <tr>
+      <td className={styles.RowName}>{`${dummyList[props.row].name.charAt(0)}. ${dummyList[props.row].surname}`}</td>
+      {props.children}
+    </tr>
+  );
+
+  myValueRenderer: ReactDataSheet.ValueRenderer<GridElement, string> = (cell, i, j) => {
+    return cell.value ? `${cell.value.start + DELIMITER + cell.value.end}` : null;
+  };
+
+  valueViewer: React.SFC<ReactDataSheet.ValueViewerProps<GridElement, string>> = props => {
+    return (
+      <div className={styles.Content}>
+        {props.cell.value ? (
+          <p>{`${format(props.cell.value.start, FORMAT)} - ${format(props.cell.value.end, FORMAT)}`}</p>
+        ) : (
+          'riposo'
+        )}
+      </div>
+    );
+  };
+
+  dataEditor: React.SFC<ReactDataSheet.DataEditorProps<GridElement, string>> = props => {
+    console.log(props.value);
+    return <div>prova</div>;
+  };
+
   render() {
     return (
       <MyReactDataSheet
         data={this.state.grid}
-        valueRenderer={myValueRenderer}
+        valueRenderer={this.myValueRenderer}
+        sheetRenderer={this.mySheetRenderer}
+        rowRenderer={this.myRowRenderer}
         onCellsChanged={changes => {
           const grid = this.state.grid.map(row => [...row]);
           changes.forEach(({ cell, row, col, value }) => {
@@ -88,27 +132,10 @@ export default class TableComponent extends React.Component<{}, AppState> {
 
           this.setState({ grid });
         }}
-        cellRenderer={cellRenderer}
-        valueViewer={valueViewer}
-        dataEditor={dataEditor}
+        cellRenderer={this.cellRenderer}
+        valueViewer={this.valueViewer}
+        dataEditor={this.dataEditor}
       />
     );
   }
 }
-
-const valueViewer: React.SFC<ReactDataSheet.ValueViewerProps<GridElement, string>> = props => {
-  return (
-    <div>
-      {props.cell.value ? (
-        <p>{`${format(props.cell.value.start, FORMAT)} - ${format(props.cell.value.end, FORMAT)}`}</p>
-      ) : (
-        'riposo'
-      )}
-    </div>
-  );
-};
-
-const dataEditor: React.SFC<ReactDataSheet.DataEditorProps<GridElement, string>> = props => {
-  console.log(props.value);
-  return <div>prova</div>;
-};

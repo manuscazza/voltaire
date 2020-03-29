@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  format,
-  Interval,
-  startOfWeek,
-  endOfWeek,
-  eachDayOfInterval
-} from 'date-fns';
+import { format, Interval, startOfWeek, endOfWeek, eachDayOfInterval, addWeeks } from 'date-fns';
 import it_IT from 'date-fns/locale/it';
 import Table from '../../components/table/Table';
 import { dummyList } from '../../dummies/dummyPerson';
@@ -24,11 +18,11 @@ const TableView: React.FunctionComponent<{}> = props => {
   const today = new Date();
   const interval: Interval = {
     start: startOfWeek(today, { weekStartsOn: 1 }),
-    end: endOfWeek(today, { weekStartsOn: 1 })
+    end: endOfWeek(addWeeks(today, 1), { weekStartsOn: 1 })
   };
   const days = eachDayOfInterval(interval);
 
-  return <Table />;
+  return <Table columns={days} />;
 };
 
 export default TableView;

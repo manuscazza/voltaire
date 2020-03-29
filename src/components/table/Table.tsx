@@ -16,15 +16,16 @@ const turno2: Interval = {
   start: new Date(2020, 10, 8, 18, 30),
   end: new Date(2020, 10, 8, 22, 0)
 };
+const turno3: Interval = {
+  start: new Date(2020, 10, 8, 7, 0),
+  end: new Date(2020, 10, 8, 12, 0)
+};
+const turno4: Interval = {
+  start: new Date(2020, 10, 8, 18, 0),
+  end: new Date(2020, 10, 8, 24, 0)
+};
+const turni = [turno1, turno2, turno3, turno4, null];
 const FORMAT = 'HH:mm';
-
-const grid: GridElement[][] = [
-  [{ value: turno1 }, { value: turno1 }, { value: turno1 }, { value: turno2 }],
-  [{ value: turno2 }, { value: turno2 }, { value: turno2 }, { value: turno1 }],
-  [{ value: turno2 }, { value: turno1 }, { value: turno2 }, { value: turno1 }],
-  [{ value: turno2 }, { value: turno2 }, { value: turno1 }, { value: turno1 }],
-  [{ value: turno2 }, { value: turno1 }, { value: turno2 }, { value: turno1 }]
-];
 
 export interface GridElement extends ReactDataSheet.Cell<GridElement, string> {
   value: Interval | null;
@@ -46,7 +47,11 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
   constructor(props: { columns: Date[] }) {
     super(props);
     this.state = {
-      grid
+      grid: dummyList.map(person =>
+        this.props.columns.map(day => {
+          return { value: turni[Math.floor(Math.random() * turni.length)] } as GridElement;
+        })
+      )
     };
   }
 
@@ -103,7 +108,6 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
   };
 
   dataEditor: React.SFC<ReactDataSheet.DataEditorProps<GridElement, string>> = props => {
-    console.log(props.value);
     return <div>prova</div>;
   };
 

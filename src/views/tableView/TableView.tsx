@@ -18,7 +18,7 @@ const TableView: React.FunctionComponent<{}> = props => {
   const today = new Date();
   const interval: Interval = {
     start: startOfWeek(today, { weekStartsOn: 1 }),
-    end: endOfWeek(addWeeks(today, 1), { weekStartsOn: 1 })
+    end: endOfWeek(addWeeks(today, 0), { weekStartsOn: 1 })
   };
   const days = eachDayOfInterval(interval);
 

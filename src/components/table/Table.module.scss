@@ -2,7 +2,6 @@
 
 .Table {
   width: 100%;
-  border-spacing: 1px;
 }
 
 .RowName {
@@ -33,8 +32,8 @@
 }
 
 .Colored {
-  background-color: $turquoise3;
-  color: hsl(90, 50%, 8%);
+  // background-color: $turquoise3;
+  // color: hsl(90, 50%, 8%);
 }
 
 .Content {

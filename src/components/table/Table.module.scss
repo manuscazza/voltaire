@@ -2,24 +2,48 @@
 
 .Table {
   width: 100%;
+  border-spacing: 0;
+
+  tr:nth-child(even) {
+    background-color: hsla(200, 100%, 82%, 0.2);
+
+  }
+
+  .Header,
+  th {
+    font-weight: 500;
+    border: none;
+    padding-top: 20px;
+    box-shadow: none;
+  }
+
 }
+
+$heigth: 58px;
 
 .RowName {
   width: 140px;
   font-weight: 600;
-  padding: 12px;
+  padding-left: 24px;
+  line-height: $heigth;
 }
 
 .Cell,
 .Selected,
 .Header,
-.RowName {
+.RowName,
+th {
   // width: 150px;
-  height: 50px;
-  border: 1px solid lightgray;
+  height: $heigth;
+  border: 1px solid hsla(10, 10%, 90%, .8);
   position: relative;
-  color: $dark-gray5;
+  color: hsl(200, 100%, 13%);
   cursor: default;
+
+  -webkit-box-shadow: inset -3px -5px 18px -3px hsla(200, 10%, 90%, .2);
+  -moz-box-shadow: inset -3px -5px 18px -3px hsla(200, 10%, 90%, .2);
+  box-shadow: inset -3px -5px 18px -3px hsla(200, 10%, 96%, .4);
+  border-radius: 1px;
 
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -27,25 +51,26 @@
   user-select: none;
 }
 
-.Selected {
-  font-weight: 600;
-}
 
-.Colored {
-  // background-color: $turquoise3;
-  // color: hsl(90, 50%, 8%);
+
+.Selected {
+  font-weight: 700;
+  border: 1px solid hsla(200, 90%, 65%, 1);
+
+  -webkit-box-shadow: inset -1px -8px 10px -6px hsla(200, 10%, 65%, .2);
+  -moz-box-shadow: inset -1px -8px 10px -6px hsla(200, 10%, 65%, .2);
+  box-shadow: inset -1px -7px 9px -6px hsla(200, 10%, 65%, .2);
 }
 
 .Content {
-  border: 1px solid $gray4;
-  border-radius: 5px;
+
   height: 90%;
   width: 98%;
-  background-color: hsla(220, 10%, 70%, 0.2);
+
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  line-height: 42px;
+  line-height: $heigth;
   text-align: center;
 }

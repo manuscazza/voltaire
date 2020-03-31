@@ -6,7 +6,7 @@ import it_IT from 'date-fns/locale/it';
 import { dummyList } from '../../dummies/dummyPerson';
 import styles from './Table.module.scss';
 
-const dataHeader = (data: Date) => format(data, 'eee dd', { locale: it_IT });
+const dataHeader = (data: Date) => format(data, 'eeeeeeee dd', { locale: it_IT });
 
 const turno1: Interval = {
   start: new Date(2020, 10, 8, 12, 0),
@@ -56,14 +56,12 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
   }
 
   cellRenderer: ReactDataSheet.CellRenderer<GridElement, string> = props => {
-    const classes = [!props.selected ? styles.Cell : styles.Selected];
-    if (props.row % 2 === 0) classes.push(styles.Colored);
     return (
       <td
         onMouseDown={props.onMouseDown}
         onMouseOver={props.onMouseOver}
         onDoubleClick={props.onDoubleClick}
-        className={classes.join(' ')}
+        className={!props.selected ? styles.Cell : styles.Selected}
       >
         {props.children}
       </td>
@@ -84,12 +82,14 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
     </table>
   );
 
-  myRowRenderer: React.SFC<ReactDataSheet.RowRendererProps<GridElement, string>> = props => (
-    <tr>
-      <td className={styles.RowName}>{`${dummyList[props.row].name.charAt(0)}. ${dummyList[props.row].surname}`}</td>
-      {props.children}
-    </tr>
-  );
+  myRowRenderer: React.SFC<ReactDataSheet.RowRendererProps<GridElement, string>> = props => {
+    return (
+      <tr>
+        <td className={styles.RowName}>{`${dummyList[props.row].name.charAt(0)}. ${dummyList[props.row].surname}`}</td>
+        {props.children}
+      </tr>
+    );
+  };
 
   myValueRenderer: ReactDataSheet.ValueRenderer<GridElement, string> = (cell, i, j) => {
     return cell.value ? `${cell.value.start + DELIMITER + cell.value.end}` : null;

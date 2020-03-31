@@ -3,13 +3,31 @@
 }
 
 .TableView {
-  border: 2px solid red;
+  // border: 2px solid red;
   height: calc(100vh - 56px);
   overflow-y: scroll;
   -ms-overflow-style: none;
 
+  padding: 24px;
+
 
   .Table {}
+
+  .TopBar {
+    // display: inline-block;
+
+    border-bottom: 1px solid hsl(0, 0%, 90%);
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 12px;
+
+
+    .SearchBar {
+      width: 300px;
+    }
+
+  }
+
 
 
 }

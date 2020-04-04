@@ -7,27 +7,6 @@ import { dummyList } from '../../dummies/dummyPerson';
 import styles from './Table.module.scss';
 import { Role, RolesAsStringArray as roles } from '../../utils/Roles';
 
-const dataHeader = (data: Date) => format(data, 'eeeeeeee dd', { locale: it_IT });
-
-const turno1: Interval = {
-  start: new Date(2020, 10, 8, 12, 0),
-  end: new Date(2020, 10, 8, 14, 30)
-};
-const turno2: Interval = {
-  start: new Date(2020, 10, 8, 18, 30),
-  end: new Date(2020, 10, 8, 22, 0)
-};
-const turno3: Interval = {
-  start: new Date(2020, 10, 8, 7, 0),
-  end: new Date(2020, 10, 8, 12, 0)
-};
-const turno4: Interval = {
-  start: new Date(2020, 10, 8, 18, 0),
-  end: new Date(2020, 10, 8, 24, 0)
-};
-const turni = [turno1, turno2, turno3, turno4, null];
-const FORMAT = 'HH:mm';
-
 export interface GridElement extends ReactDataSheet.Cell<GridElement, string> {
   value: Interval | null;
   role: Role | null;
@@ -39,10 +18,9 @@ interface AppState {
   grid: GridElement[][];
 }
 
-const DELIMITER = '-';
-
 interface MyProps {
   columns: Date[];
+  toggleEditorTurni?: () => void;
 }
 
 export default class TableComponent extends React.Component<MyProps, AppState> {
@@ -65,7 +43,10 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
       <td
         onMouseDown={props.onMouseDown}
         onMouseOver={props.onMouseOver}
-        onDoubleClick={props.onDoubleClick}
+        // onDoubleClick={props.onDoubleClick}
+        onDoubleClick={() => {
+          if (this.props.toggleEditorTurni) this.props.toggleEditorTurni();
+        }}
         className={!props.selected ? styles.Cell : styles.Selected}
       >
         {props.children}
@@ -78,8 +59,10 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
       <thead>
         <tr>
           <th />
-          {this.props.columns.map(day => (
-            <th className={styles.Header}>{dataHeader(day)}</th>
+          {this.props.columns.map((day, index) => (
+            <th key={index} className={styles.Header}>
+              {dataHeader(day)}
+            </th>
           ))}
         </tr>
       </thead>
@@ -116,6 +99,7 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
   };
 
   dataEditor: React.SFC<ReactDataSheet.DataEditorProps<GridElement, string>> = props => {
+    if (this.props.toggleEditorTurni) this.props.toggleEditorTurni();
     return <div>prova</div>;
   };
 
@@ -153,3 +137,26 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
     );
   }
 }
+
+const turno1: Interval = {
+  start: new Date(2020, 10, 8, 12, 0),
+  end: new Date(2020, 10, 8, 14, 30)
+};
+const turno2: Interval = {
+  start: new Date(2020, 10, 8, 18, 30),
+  end: new Date(2020, 10, 8, 22, 0)
+};
+const turno3: Interval = {
+  start: new Date(2020, 10, 8, 7, 0),
+  end: new Date(2020, 10, 8, 12, 0)
+};
+const turno4: Interval = {
+  start: new Date(2020, 10, 8, 18, 0),
+  end: new Date(2020, 10, 8, 24, 0)
+};
+const turni = [turno1, turno2, turno3, turno4, null];
+const FORMAT = 'HH:mm';
+
+const dataHeader = (data: Date) => format(data, 'eeeeeeee dd', { locale: it_IT });
+
+const DELIMITER = '-';

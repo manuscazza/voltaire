@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
-import { format, Interval, startOfWeek, endOfWeek, eachDayOfInterval, toDate, getTime, isDate } from 'date-fns';
+import { format, Interval } from 'date-fns';
 import it_IT from 'date-fns/locale/it';
 import { dummyList } from '../../dummies/dummyPerson';
 import styles from './Table.module.scss';
@@ -39,15 +39,36 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
   }
 
   cellRenderer: ReactDataSheet.CellRenderer<GridElement, string> = props => {
+    const { cell, col, row, value } = (props.children as JSX.Element).props as ReactDataSheet.ValueViewerProps<
+      GridElement,
+      string
+    >;
     return (
       <td
         onMouseDown={props.onMouseDown}
-        onMouseOver={props.onMouseOver}
-        // onDoubleClick={props.onDoubleClick}
-        onDoubleClick={() => {
-          if (this.props.toggleEditorTurni) this.props.toggleEditorTurni();
-        }}
+        // onMouseOver={props.onMouseOver}
+        onDoubleClick={props.onDoubleClick}
         className={!props.selected ? styles.Cell : styles.Selected}
+        draggable={true}
+        onDragStart={ev => {
+          ev.dataTransfer.setData('text', value as string);
+          if (ev.ctrlKey) {
+            console.log('ctrl');
+            //ctrl -> copia
+          }
+        }}
+        onDragOver={ev => {
+          ev.preventDefault();
+        }}
+        onDrop={ev => {
+          ev.preventDefault();
+          const value = ev.dataTransfer.getData('text');
+          this.onChangeHandler([{ cell, col, row, value }]);
+          ev.currentTarget.focus();
+        }}
+        onDragEnd={ev => {
+          ev.currentTarget.blur();
+        }}
       >
         {props.children}
       </td>
@@ -83,13 +104,13 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
     return cell.value ? `${cell.value.start + DELIMITER + cell.value.end}|${cell.role}` : null;
   };
 
-  valueViewer: React.SFC<ReactDataSheet.ValueViewerProps<GridElement, string>> = props => {
+  valueViewer: React.SFC<ReactDataSheet.ValueViewerProps<GridElement, string>> = ({ cell, col, row, value }) => {
     return (
       <div className={styles.Content}>
-        {props.cell.value ? (
+        {cell.value ? (
           <>
-            <p>{props.cell.role}</p>
-            <p>{`${format(props.cell.value.start, FORMAT)} - ${format(props.cell.value.end, FORMAT)}`}</p>
+            <p>{cell.role}</p>
+            <p>{`${format(cell.value.start, FORMAT)} - ${format(cell.value.end, FORMAT)}`}</p>
           </>
         ) : (
           '-'
@@ -103,6 +124,25 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
     return <div>prova</div>;
   };
 
+  onChangeHandler = (changes: ReactDataSheet.CellsChangedArgs<GridElement, string>) => {
+    const grid = this.state.grid.map(row => [...row]);
+    changes.forEach(({ cell, row, col, value }) => {
+      let turno: Interval | null = null;
+      let role: Role | null = null;
+      if (value) {
+        const [date, ruolo] = value.split('|');
+        role = ruolo as Role;
+        const dates = date.split(DELIMITER);
+        turno = {
+          start: new Date(dates[0]),
+          end: new Date(dates[1])
+        };
+      }
+      grid[row][col] = { ...grid[row][col], value: turno, role: role };
+    });
+    this.setState({ grid });
+  };
+
   render() {
     return (
       <MyReactDataSheet
@@ -110,26 +150,7 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
         valueRenderer={this.myValueRenderer}
         sheetRenderer={this.mySheetRenderer}
         rowRenderer={this.myRowRenderer}
-        // attributesRenderer={(cell) => {'data-role': cell.role || {}}
-        onCellsChanged={changes => {
-          const grid = this.state.grid.map(row => [...row]);
-          changes.forEach(({ cell, row, col, value }) => {
-            let turno: Interval | null = null;
-            let role: Role | null = null;
-            console.log(value);
-            if (value) {
-              const [date, ruolo] = value.split('|');
-              role = ruolo as Role;
-              const dates = date.split(DELIMITER);
-              turno = {
-                start: new Date(dates[0]),
-                end: new Date(dates[1])
-              };
-            }
-            grid[row][col] = { ...grid[row][col], value: turno, role: role };
-          });
-          this.setState({ grid });
-        }}
+        onCellsChanged={this.onChangeHandler}
         cellRenderer={this.cellRenderer}
         valueViewer={this.valueViewer}
         dataEditor={this.dataEditor}

@@ -2,19 +2,15 @@
 
 $heigth: 70px;
 
-
 .Table {
-
   table-layout: fixed;
   width: 100%;
   border-spacing: 0;
 
   overflow-y: scroll;
 
-
   tr:nth-child(even) {
     background-color: hsla(200, 100%, 82%, 0.2);
-
   }
 
   .Header,
@@ -30,9 +26,7 @@ $heigth: 70px;
   th:first-child {
     width: 170px;
   }
-
 }
-
 
 .RowName {
   width: 110px;
@@ -47,7 +41,7 @@ $heigth: 70px;
 th {
   // width: 150px;
   height: $heigth;
-  border: 1px solid hsla(10, 10%, 90%, .8);
+  border: 1px solid hsla(10, 10%, 90%, 0.8);
 }
 
 .Cell,
@@ -57,9 +51,9 @@ th {
   color: hsl(200, 100%, 9%);
   cursor: pointer;
 
-  -webkit-box-shadow: inset -3px -5px 18px -3px hsla(200, 10%, 90%, .2);
-  -moz-box-shadow: inset -3px -5px 18px -3px hsla(200, 10%, 90%, .2);
-  box-shadow: inset -3px -5px 18px -3px hsla(200, 10%, 96%, .2);
+  -webkit-box-shadow: inset -3px -5px 18px -3px hsla(200, 10%, 90%, 0.2);
+  -moz-box-shadow: inset -3px -5px 18px -3px hsla(200, 10%, 90%, 0.2);
+  box-shadow: inset -3px -5px 18px -3px hsla(200, 10%, 96%, 0.2);
   border-radius: 1px;
 
   -webkit-user-select: none;
@@ -68,21 +62,18 @@ th {
   user-select: none;
 }
 
-
-
 .Selected {
   font-weight: 700;
   border: 1px solid hsla(200, 90%, 65%, 1);
 
-  -webkit-box-shadow: inset -1px -8px 10px -6px hsla(200, 10%, 85%, .2);
-  -moz-box-shadow: inset -1px -8px 10px -6px hsla(200, 10%, 85%, .2);
-  box-shadow: inset -1px -7px 9px -6px hsla(200, 10%, 85%, .2);
+  // cursor: grab;
+}
 
-  cursor: grab;
+.Cell:hover {
+  border: 1px solid hsla(200, 90%, 85%, 1);
 }
 
 .Content {
-
   display: flex;
   flex-direction: column;
   align-items: center;

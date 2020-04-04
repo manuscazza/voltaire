@@ -5,15 +5,17 @@ $gap: 24px;
 $num-columns: 3;
 
 .PersonListView::-webkit-scrollbar {
-  display: none;
+  // display: none;
 }
 
 .PersonListView {
   padding: 24px;
   padding-top: 0;
   // border: 2px solid grey;
+
   overflow-y: scroll;
-  -ms-overflow-style: none;
+  // -ms-overflow-style: none;
+
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, $person-width);

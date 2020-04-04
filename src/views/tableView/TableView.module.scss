@@ -1,20 +1,17 @@
-.TableView::-webkit-scrollbar {
-  display: none;
-}
-
 .TableView {
-  // border: 2px solid red;
+  display: flex;
+  flex-direction: column;
+
   height: calc(100vh - 56px);
-  overflow-y: scroll;
-  -ms-overflow-style: none;
 
   padding: 24px;
+
+  overflow: auto;
 
 
   .Table {}
 
   .TopBar {
-    // display: inline-block;
 
     border-bottom: 1px solid hsl(0, 0%, 90%);
     display: flex;

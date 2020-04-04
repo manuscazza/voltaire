@@ -5,6 +5,7 @@ import { format, Interval, startOfWeek, endOfWeek, eachDayOfInterval, toDate, ge
 import it_IT from 'date-fns/locale/it';
 import { dummyList } from '../../dummies/dummyPerson';
 import styles from './Table.module.scss';
+import { Role, RolesAsStringArray as roles } from '../../utils/Roles';
 
 const dataHeader = (data: Date) => format(data, 'eeeeeeee dd', { locale: it_IT });
 
@@ -29,6 +30,7 @@ const FORMAT = 'HH:mm';
 
 export interface GridElement extends ReactDataSheet.Cell<GridElement, string> {
   value: Interval | null;
+  role: Role | null;
 }
 
 class MyReactDataSheet extends ReactDataSheet<GridElement, string> {}
@@ -49,7 +51,10 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
     this.state = {
       grid: dummyList.map(person =>
         this.props.columns.map(day => {
-          return { value: turni[Math.floor(Math.random() * turni.length)] } as GridElement;
+          return {
+            value: turni[Math.floor(Math.random() * turni.length)],
+            role: roles[Math.floor(Math.random() * roles.length)] as Role
+          } as GridElement;
         })
       )
     };
@@ -92,16 +97,19 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
   };
 
   myValueRenderer: ReactDataSheet.ValueRenderer<GridElement, string> = (cell, i, j) => {
-    return cell.value ? `${cell.value.start + DELIMITER + cell.value.end}` : null;
+    return cell.value ? `${cell.value.start + DELIMITER + cell.value.end}|${cell.role}` : null;
   };
 
   valueViewer: React.SFC<ReactDataSheet.ValueViewerProps<GridElement, string>> = props => {
     return (
       <div className={styles.Content}>
         {props.cell.value ? (
-          <p>{`${format(props.cell.value.start, FORMAT)} - ${format(props.cell.value.end, FORMAT)}`}</p>
+          <>
+            <p>{props.cell.role}</p>
+            <p>{`${format(props.cell.value.start, FORMAT)} - ${format(props.cell.value.end, FORMAT)}`}</p>
+          </>
         ) : (
-          'riposo'
+          '-'
         )}
       </div>
     );
@@ -118,22 +126,24 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
         valueRenderer={this.myValueRenderer}
         sheetRenderer={this.mySheetRenderer}
         rowRenderer={this.myRowRenderer}
+        // attributesRenderer={(cell) => {'data-role': cell.role || {}}
         onCellsChanged={changes => {
           const grid = this.state.grid.map(row => [...row]);
           changes.forEach(({ cell, row, col, value }) => {
             let turno: Interval | null = null;
+            let role: Role | null = null;
             console.log(value);
             if (value) {
-              const dates = value.split(DELIMITER);
-
+              const [date, ruolo] = value.split('|');
+              role = ruolo as Role;
+              const dates = date.split(DELIMITER);
               turno = {
                 start: new Date(dates[0]),
                 end: new Date(dates[1])
               };
             }
-            grid[row][col] = { ...grid[row][col], value: turno };
+            grid[row][col] = { ...grid[row][col], value: turno, role: role };
           });
-
           this.setState({ grid });
         }}
         cellRenderer={this.cellRenderer}

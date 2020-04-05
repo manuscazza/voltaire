@@ -26,6 +26,33 @@ $heigth: 70px;
   th:first-child {
     width: 170px;
   }
+
+  input[type='text']:focus,
+  input[type='text'] {
+    border: 0px solid transparent;
+    width: 30%;
+    text-align: center;
+    outline: none;
+    background-color: transparent;
+    font-size: larger;
+    // transition: all 0.1s ease-out;
+  }
+
+  input[type='text']:focus {
+    border-bottom: 1px solid lightblue;
+  }
+
+  input[type='text']:invalid {
+    border-bottom: 1px solid red;
+    color: red;
+  }
+
+  .InputGroup {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .RowName {

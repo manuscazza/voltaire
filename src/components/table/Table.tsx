@@ -5,7 +5,8 @@ import { format, Interval } from 'date-fns';
 import it_IT from 'date-fns/locale/it';
 import { dummyList } from '../../dummies/dummyPerson';
 import styles from './Table.module.scss';
-import { Role, RolesAsStringArray as roles } from '../../utils/Roles';
+import { Role, RolesAsStringArray as roles, RolesAsStringArray } from '../../utils/Roles';
+import { Overlay, InputGroup, HTMLSelect } from '@blueprintjs/core';
 
 export interface GridElement extends ReactDataSheet.Cell<GridElement, string> {
   value: Interval | null;
@@ -16,11 +17,13 @@ class MyReactDataSheet extends ReactDataSheet<GridElement, string> {}
 
 interface AppState {
   grid: GridElement[][];
+  isCopying: boolean;
+  isDropped: boolean;
+  showOverlay: boolean;
 }
 
 interface MyProps {
   columns: Date[];
-  toggleEditorTurni?: () => void;
 }
 
 export default class TableComponent extends React.Component<MyProps, AppState> {
@@ -34,7 +37,10 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
             role: roles[Math.floor(Math.random() * roles.length)] as Role
           } as GridElement;
         })
-      )
+      ),
+      isCopying: false,
+      isDropped: false,
+      showOverlay: false
     };
   }
 
@@ -52,23 +58,27 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
         draggable={true}
         onDragStart={ev => {
           ev.dataTransfer.setData('text', value as string);
-          if (ev.ctrlKey) {
-            console.log('ctrl');
-            //ctrl -> copia
+          if (!ev.ctrlKey) {
+            this.setState({ isCopying: true });
           }
         }}
         onDragOver={ev => {
           ev.preventDefault();
         }}
         onDrop={ev => {
+          ev.currentTarget.click();
           ev.preventDefault();
+          this.setState({ isDropped: true });
           const value = ev.dataTransfer.getData('text');
           this.onChangeHandler([{ cell, col, row, value }]);
-          ev.currentTarget.focus();
         }}
         onDragEnd={ev => {
-          ev.currentTarget.blur();
+          if (this.state.isCopying && this.state.isDropped) {
+            this.onChangeHandler([{ cell, col, row, value: null }]);
+            this.setState({ isCopying: false, isDropped: false });
+          }
         }}
+        onDragExit={() => this.setState({ isCopying: false })}
       >
         {props.children}
       </td>
@@ -120,8 +130,43 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
   };
 
   dataEditor: React.SFC<ReactDataSheet.DataEditorProps<GridElement, string>> = props => {
-    if (this.props.toggleEditorTurni) this.props.toggleEditorTurni();
-    return <div>prova</div>;
+    return (
+      <div className={styles.InputGroup}>
+        {/* <HTMLSelect
+          id={styles.orderBy}
+          options={RolesAsStringArray}
+          // elementRef={createRoleRef}
+        ></HTMLSelect> */}
+        <input
+          type="text"
+          maxLength={4}
+          pattern="[0-9]+"
+          autoFocus={true}
+          onKeyDown={ev => {
+            if (ev.key === 'Enter') {
+              (ev.currentTarget.nextElementSibling as HTMLInputElement).focus();
+            } else if (ev.key === 'Escape') {
+              props.onRevert();
+            }
+          }}
+        />
+        -
+        <input
+          type="text"
+          maxLength={4}
+          pattern="[0-9]+"
+          onKeyDown={ev => {
+            if (ev.key === 'Enter') {
+              console.log(ev.currentTarget.value);
+
+              props.onCommit(ev.currentTarget.value, ev);
+            } else if (ev.key === ' Escape') {
+              props.onRevert();
+            }
+          }}
+        />
+      </div>
+    );
   };
 
   onChangeHandler = (changes: ReactDataSheet.CellsChangedArgs<GridElement, string>) => {
@@ -143,18 +188,35 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
     this.setState({ grid });
   };
 
+  toggleOverlay() {
+    this.setState(state => {
+      return { showOverlay: !state.showOverlay };
+    });
+  }
+
   render() {
     return (
-      <MyReactDataSheet
-        data={this.state.grid}
-        valueRenderer={this.myValueRenderer}
-        sheetRenderer={this.mySheetRenderer}
-        rowRenderer={this.myRowRenderer}
-        onCellsChanged={this.onChangeHandler}
-        cellRenderer={this.cellRenderer}
-        valueViewer={this.valueViewer}
-        dataEditor={this.dataEditor}
-      />
+      <>
+        <Overlay
+          isOpen={this.state.showOverlay}
+          onClose={this.toggleOverlay}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={false}
+          transitionDuration={50}
+        >
+          <p>prova editor</p>
+        </Overlay>
+        <MyReactDataSheet
+          data={this.state.grid}
+          valueRenderer={this.myValueRenderer}
+          sheetRenderer={this.mySheetRenderer}
+          rowRenderer={this.myRowRenderer}
+          onCellsChanged={this.onChangeHandler}
+          cellRenderer={this.cellRenderer}
+          valueViewer={this.valueViewer}
+          dataEditor={this.dataEditor}
+        />
+      </>
     );
   }
 }
@@ -178,6 +240,6 @@ const turno4: Interval = {
 const turni = [turno1, turno2, turno3, turno4, null];
 const FORMAT = 'HH:mm';
 
-const dataHeader = (data: Date) => format(data, 'eeeeeeee dd', { locale: it_IT });
+const dataHeader = (data: Date) => format(data, 'eeeeeee dd', { locale: it_IT });
 
 const DELIMITER = '-';

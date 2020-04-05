@@ -42,7 +42,7 @@ const TableView: React.FunctionComponent<{}> = props => {
             onChange={() => {}}
           />
         </div>
-        <Table columns={days} />
+        <Table dateRange={days} />
       </div>
     </>
   );

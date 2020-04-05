@@ -43,8 +43,7 @@ $heigth: 70px;
   }
 
   input[type='text']:invalid {
-    border-bottom: 1px solid red;
-    color: red;
+    border-bottom: 1px solid lightcoral;
   }
 
   .InputGroup {

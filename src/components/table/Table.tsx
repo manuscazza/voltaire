@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
-import { format, Interval } from 'date-fns';
+import { format, Interval, addDays, setHours, setMinutes, parse } from 'date-fns';
 import it_IT from 'date-fns/locale/it';
 import { dummyList } from '../../dummies/dummyPerson';
 import styles from './Table.module.scss';
-import { Role, RolesAsStringArray as roles, RolesAsStringArray } from '../../utils/Roles';
-import { Overlay, InputGroup, HTMLSelect } from '@blueprintjs/core';
+import { Role, RolesAsStringArray as roles } from '../../utils/Roles';
+import { Overlay } from '@blueprintjs/core';
 
 export interface GridElement extends ReactDataSheet.Cell<GridElement, string> {
   value: Interval | null;
@@ -23,15 +23,15 @@ interface AppState {
 }
 
 interface MyProps {
-  columns: Date[];
+  dateRange: Date[];
 }
 
 export default class TableComponent extends React.Component<MyProps, AppState> {
-  constructor(props: { columns: Date[] }) {
+  constructor(props: { dateRange: Date[] }) {
     super(props);
     this.state = {
       grid: dummyList.map(person =>
-        this.props.columns.map(day => {
+        this.props.dateRange.map(day => {
           return {
             value: turni[Math.floor(Math.random() * turni.length)],
             role: roles[Math.floor(Math.random() * roles.length)] as Role
@@ -90,7 +90,7 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
       <thead>
         <tr>
           <th />
-          {this.props.columns.map((day, index) => (
+          {this.props.dateRange.map((day, index) => (
             <th key={index} className={styles.Header}>
               {dataHeader(day)}
             </th>
@@ -110,8 +110,10 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
     );
   };
 
+  generateValueString = (value: Interval, role: Role | null) => `${value.start + DELIMITER + value.end}|${role || ''}`;
+
   myValueRenderer: ReactDataSheet.ValueRenderer<GridElement, string> = (cell, i, j) => {
-    return cell.value ? `${cell.value.start + DELIMITER + cell.value.end}|${cell.role}` : null;
+    return cell.value ? this.generateValueString(cell.value, cell.role) : null;
   };
 
   valueViewer: React.SFC<ReactDataSheet.ValueViewerProps<GridElement, string>> = ({ cell, col, row, value }) => {
@@ -129,7 +131,15 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
     );
   };
 
-  dataEditor: React.SFC<ReactDataSheet.DataEditorProps<GridElement, string>> = props => {
+  dataEditor: React.SFC<ReactDataSheet.DataEditorProps<GridElement, string>> = ({
+    cell,
+    col,
+    row,
+    value,
+    onRevert,
+    onCommit
+  }) => {
+    const pattern = '([01]?[0-9]{1}|2[0-3]{1})[0-5]{1}[0-9]{1}';
     return (
       <div className={styles.InputGroup}>
         {/* <HTMLSelect
@@ -139,14 +149,16 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
         ></HTMLSelect> */}
         <input
           type="text"
+          minLength={4}
           maxLength={4}
-          pattern="[0-9]+"
+          title="Errore nel campo inserito"
+          pattern={pattern}
           autoFocus={true}
           onKeyDown={ev => {
             if (ev.key === 'Enter') {
               (ev.currentTarget.nextElementSibling as HTMLInputElement).focus();
             } else if (ev.key === 'Escape') {
-              props.onRevert();
+              onRevert();
             }
           }}
         />
@@ -154,14 +166,27 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
         <input
           type="text"
           maxLength={4}
-          pattern="[0-9]+"
+          minLength={4}
+          title="Errore nel campo inserito"
+          pattern={pattern}
           onKeyDown={ev => {
             if (ev.key === 'Enter') {
-              console.log(ev.currentTarget.value);
-
-              props.onCommit(ev.currentTarget.value, ev);
+              if ((ev.currentTarget.previousElementSibling as HTMLInputElement).reportValidity()) {
+                const timeStart = (ev.currentTarget.previousElementSibling as HTMLInputElement).value;
+                let start = new Date(this.props.dateRange[col]);
+                start = parse(timeStart, 'HHmm', start);
+                if (ev.currentTarget.reportValidity()) {
+                  const timeEnd = ev.currentTarget.value;
+                  let end =
+                    timeEnd >= timeStart ? new Date(this.props.dateRange[col]) : addDays(this.props.dateRange[col], 1);
+                  end = parse(timeEnd, 'HHmm', end);
+                  const value = this.generateValueString({ start, end }, null);
+                  onCommit(value);
+                  this.onChangeHandler([{ cell, col, row, value }]);
+                }
+              }
             } else if (ev.key === ' Escape') {
-              props.onRevert();
+              onRevert();
             }
           }}
         />
@@ -170,6 +195,7 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
   };
 
   onChangeHandler = (changes: ReactDataSheet.CellsChangedArgs<GridElement, string>) => {
+    // console.log('onChange CALLED');
     const grid = this.state.grid.map(row => [...row]);
     changes.forEach(({ cell, row, col, value }) => {
       let turno: Interval | null = null;

@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
-import { format, Interval, addDays, setHours, setMinutes, parse } from 'date-fns';
+import { format, Interval, addDays, parse } from 'date-fns';
 import it_IT from 'date-fns/locale/it';
 import { dummyList } from '../../dummies/dummyPerson';
 import styles from './Table.module.scss';
 import { Role, RolesAsStringArray as roles } from '../../utils/Roles';
-import { Overlay } from '@blueprintjs/core';
+import { Overlay, ContextMenuTarget, Menu, MenuItem, ContextMenu } from '@blueprintjs/core';
 
 export interface GridElement extends ReactDataSheet.Cell<GridElement, string> {
   value: Interval | null;
@@ -49,6 +49,7 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
       GridElement,
       string
     >;
+
     return (
       <td
         onMouseDown={props.onMouseDown}
@@ -79,6 +80,7 @@ export default class TableComponent extends React.Component<MyProps, AppState> {
           }
         }}
         onDragExit={() => this.setState({ isCopying: false })}
+        contextMenu={'ciao'}
       >
         {props.children}
       </td>

@@ -1,30 +1,66 @@
-import React, { useState } from 'react';
-import { Text, Button } from '@blueprintjs/core';
+import React from 'react';
+import { Menu, MenuItem } from '@blueprintjs/core';
+import styles from './Comp.module.scss';
 
-type Data = {
-  data?: string;
-};
-
-interface IUser {
-  name: string;
+interface AppState {
+  showMenu: boolean;
+  coordinates: {
+    x: number;
+    y: number;
+  };
 }
 
-const Comp = (props: Data) => {
-  const [show, setShow] = useState<boolean>(true);
-  const toggleHanadler = (): void => {
-    setShow(state => !state);
-  };
-  let user: IUser = { name: '' };
-  if (props.data) user = { name: props.data };
-  return (
-    <div>
-      <Text>Ciao {show ? user.name : null}</Text>
-      <Button outlined intent="success" onClick={toggleHanadler}>
-        Toggle
-      </Button>
-      <Button className="ml4">Second button</Button>
-    </div>
-  );
-};
+export default class RightClickMeWithContext extends React.Component<{}, AppState> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      showMenu: false,
+      coordinates: {
+        x: 0,
+        y: 0
+      }
+    };
+  }
 
-export default Comp;
+  render() {
+    return (
+      <div className={styles.Container} onClick={this.showMenu} onContextMenu={this.showMenu}>
+        {this.renderContextMenu()}
+      </div>
+    );
+  }
+
+  renderContextMenu() {
+    // return a single element, or nothing to use default browser behavior
+    return (
+      <Menu
+        style={{
+          border: '1px solid lightgray',
+          boxShadow: '1px 1px 1.5px hsla(0, 2%, 30%, .8)',
+          position: 'fixed',
+          left: this.state.coordinates.x,
+          top: this.state.coordinates.y,
+          zIndex: 500,
+          display: this.state.showMenu ? 'inline-block' : 'none'
+        }}
+        onBlur={this.closeMenu}
+      >
+        <MenuItem text="Save" />
+        <MenuItem text="Delete" />
+      </Menu>
+    );
+  }
+
+  private showMenu = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.preventDefault();
+    if (event.button === 2) {
+      const x = event.clientX;
+      const y = event.clientY;
+      this.setState({ showMenu: true, coordinates: { x, y } });
+    }
+  };
+
+  private closeMenu = (event: React.FocusEvent<HTMLUListElement>) => {
+    this.setState({ showMenu: false });
+  };
+}

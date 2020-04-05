@@ -1,15 +1,11 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import PersonView from './views/personView/PersonView';
 import AppNav from './components/navbar/AppNav';
 import TableView from './views/tableView/TableView';
 import WIP from './components/workInProgress/WIP';
 import './App.scss';
+import Comp from './components/comp/Comp';
 
 function App() {
   return (
@@ -31,7 +27,8 @@ function App() {
         </Route>
         <Route path="/mail">
           {/* <Redirect to="/home" /> */}
-          <WIP />
+          {/* <WIP /> */}
+          <Comp />
         </Route>
         <Route path="/impostazioni">
           {/* <Redirect to="/home" /> */}
